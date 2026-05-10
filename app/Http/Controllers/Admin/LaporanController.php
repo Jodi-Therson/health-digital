@@ -47,11 +47,29 @@ class LaporanController extends Controller
         $bulan = $request->bulan ?? now()->format('Y-m');
         [$tahun, $bln] = explode('-', $bulan);
 
+        $startDate = Carbon::create($tahun, $bln)->startOfMonth()->format('Y-m-d');
+        $endDate = Carbon::create($tahun, $bln)->endOfMonth()->format('Y-m-d');
+
         $antrians = Antrian::with(['pasien.user', 'dokter.user', 'layanan', 'pembayaran'])
             ->whereYear('tanggal', $tahun)->whereMonth('tanggal', $bln)
             ->orderBy('tanggal')->get();
 
-        $pdf = Pdf::loadView('admin.laporan.pdf', compact('antrians', 'bulan'));
+        $totalAntrian = $antrians->count();
+        $antrianSelesai = $antrians->where('status', 'selesai')->count();
+        $totalPendapatan = Pembayaran::where('status', 'dibayar')
+            ->whereYear('dibayar_pada', $tahun)->whereMonth('dibayar_pada', $bln)->sum('jumlah');
+
+        $pendapatanLayanan = \Illuminate\Support\Facades\DB::table('pembayarans')
+            ->join('antrians', 'pembayarans.antrian_id', '=', 'antrians.id')
+            ->join('layanans', 'antrians.layanan_id', '=', 'layanans.id')
+            ->where('pembayarans.status', 'dibayar')
+            ->whereYear('pembayarans.dibayar_pada', $tahun)
+            ->whereMonth('pembayarans.dibayar_pada', $bln)
+            ->select('layanans.nama', \Illuminate\Support\Facades\DB::raw('count(antrians.id) as jumlah_antrian'), \Illuminate\Support\Facades\DB::raw('sum(pembayarans.jumlah) as total'))
+            ->groupBy('layanans.id', 'layanans.nama')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.laporan.pdf', compact('antrians', 'bulan', 'startDate', 'endDate', 'totalAntrian', 'antrianSelesai', 'totalPendapatan', 'pendapatanLayanan'));
         return $pdf->download('laporan-' . $bulan . '.pdf');
     }
 }

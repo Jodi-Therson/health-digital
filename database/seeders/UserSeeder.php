@@ -22,8 +22,17 @@ class UserSeeder extends Seeder
 
         // DOKTER
         $dokterData = [
-            ['name' => 'Dr. Dokter', 'email' => 'dokter@healthdigital.id', 'spesialisasi' => 'Dokter Umum', 'no_str' => 'STR-DKT-001', 'tarif' => 150000,
-             'bio' => 'Dokter umum berpengalaman lebih dari 10 tahun di bidang pelayanan kesehatan primer.'],
+            ['name' => 'Dr. Andi', 'email' => 'andi@healthdigital.id', 'spesialisasi' => 'Dokter Umum', 'no_str' => 'STR-DKT-001', 'tarif' => 100000, 'bio' => 'Dokter umum yang ramah melayani semua keluhan ringan.'],
+            ['name' => 'Dr. Budi', 'email' => 'budi@healthdigital.id', 'spesialisasi' => 'Dokter Umum', 'no_str' => 'STR-DKT-002', 'tarif' => 120000, 'bio' => 'Dokter umum senior berpengalaman puluhan tahun.'],
+            
+            ['name' => 'Drg. Citra', 'email' => 'citra@healthdigital.id', 'spesialisasi' => 'Spesialis Gigi', 'no_str' => 'STR-GIG-001', 'tarif' => 200000, 'bio' => 'Dokter gigi spesialis konservasi gigi anak dan dewasa.'],
+            ['name' => 'Drg. Diana', 'email' => 'diana@healthdigital.id', 'spesialisasi' => 'Spesialis Gigi', 'no_str' => 'STR-GIG-002', 'tarif' => 250000, 'bio' => 'Dokter gigi estetik dan implan gigi bersertifikat.'],
+            
+            ['name' => 'Dr. Eka', 'email' => 'eka@healthdigital.id', 'spesialisasi' => 'Spesialis Anak', 'no_str' => 'STR-ANK-001', 'tarif' => 250000, 'bio' => 'Dokter spesialis anak dengan sub-spesialisasi tumbuh kembang.'],
+            ['name' => 'Dr. Fajar', 'email' => 'fajar@healthdigital.id', 'spesialisasi' => 'Spesialis Anak', 'no_str' => 'STR-ANK-002', 'tarif' => 220000, 'bio' => 'Ahli gizi dan perawatan khusus balita sakit kronis.'],
+            
+            ['name' => 'Dr. Gita', 'email' => 'gita@healthdigital.id', 'spesialisasi' => 'Spesialis Kandungan', 'no_str' => 'STR-KND-001', 'tarif' => 300000, 'bio' => 'Spesialis kebidanan dan kandungan, ahli operasi caesar.'],
+            ['name' => 'Dr. Hari', 'email' => 'hari@healthdigital.id', 'spesialisasi' => 'Spesialis Kandungan', 'no_str' => 'STR-KND-002', 'tarif' => 280000, 'bio' => 'Konsultan program hamil dan penanganan infertilitas modern.'],
         ];
 
         foreach ($dokterData as $d) {

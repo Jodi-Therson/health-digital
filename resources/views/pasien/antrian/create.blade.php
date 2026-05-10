@@ -20,7 +20,7 @@
 <div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>
 @endif
 
-<form method="POST" action="{{ route('pasien.antrian.store') }}" x-data="{ loading: false }" @submit="loading = true">
+<form id="antrianForm" method="POST" action="{{ route('pasien.antrian.store') }}" x-data="{ loading: false, showModal: false }" @submit.prevent="if($el.checkValidity()) showModal = true">
     @csrf
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;" class="form-grid">
         <div class="card">
@@ -99,11 +99,54 @@
     <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1.5rem;">
         <a href="{{ route('pasien.antrian.index') }}" class="btn btn-secondary">Batal</a>
         <button type="submit" class="btn btn-primary" :disabled="loading">
-            <span x-show="!loading">Daftar Antrian</span>
-            <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Memproses...</span>
+            Daftar Antrian
         </button>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div x-show="showModal" style="display: none;" class="modal-backdrop" x-transition.opacity>
+        <div class="modal-content" @click.away="showModal = false" x-transition>
+            <div class="modal-header">
+                Konfirmasi Pendaftaran
+            </div>
+            <div class="modal-body">
+                <p style="color: #334155; line-height: 1.6;">Apakah Anda yakin keluhan dan jadwal yang Anda pilih sudah benar?</p>
+                <div style="margin-top: 1rem; padding: 0.75rem; background: #fffbeb; border-left: 4px solid #f59e0b; font-size: 0.875rem; color: #92400e;">
+                    <strong>Perhatian:</strong> Antrian yang sudah dibuat tidak dapat dibatalkan atau diubah jadwalnya secara mandiri.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="showModal = false" :disabled="loading">Cek Kembali</button>
+                <button type="button" class="btn btn-primary" :disabled="loading" @click="loading = true; document.getElementById('antrianForm').submit()">
+                    <span x-show="!loading">Ya, Daftar Sekarang</span>
+                    <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Memproses...</span>
+                </button>
+            </div>
+        </div>
     </div>
 </form>
 
-<style>@media(max-width:768px){.form-grid{grid-template-columns:1fr !important;}}</style>
+<style>
+@media(max-width:768px){.form-grid{grid-template-columns:1fr !important;}}
+.modal-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-content {
+    background: white; border-radius: 0.75rem; width: 90%; max-width: 28rem;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+.modal-header {
+    padding: 1.25rem 1.5rem; font-size: 1.125rem; font-weight: 700; color: #0f172a;
+    border-bottom: 1px solid #e2e8f0;
+}
+.modal-body {
+    padding: 1.5rem;
+}
+.modal-footer {
+    padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0;
+    display: flex; justify-content: flex-end; gap: 0.75rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem;
+}
+</style>
 @endsection

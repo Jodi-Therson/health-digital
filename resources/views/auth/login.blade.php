@@ -8,8 +8,23 @@
     <p style="font-size:0.875rem; color:#64748b;">Masuk ke akun HealthDigital Anda</p>
 </div>
 
+@error('login_failed')
+<div style="background-color: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.25rem;">
+        <svg style="width:1.25rem;height:1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Kredensial Tidak Valid
+    </div>
+    <div>{{ $message }}</div>
+    
+    @if(session('login_failures', 0) > 0 && session('login_failures', 0) % 3 === 0)
+    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #fecaca;">
+        <strong>Masih kesulitan?</strong> Anda sudah gagal masuk {{ session('login_failures') }} kali. Jika lupa password, Anda bisa melakukan reset melalui tautan <a href="{{ route('password.request') }}" style="color: #dc2626; text-decoration: underline; font-weight: 600;">Lupa password</a>.
+    </div>
+    @endif
+</div>
+@enderror
 
-<form method="POST" action="{{ route('login') }}" x-data="{ loading: false }" @submit="loading = true">
+<form method="POST" action="{{ route('login') }}" x-data="{ loading: false }" @submit="if($el.checkValidity()) { loading = true; }">
     @csrf
 
     <div class="form-group">
@@ -18,10 +33,7 @@
                class="form-input {{ $errors->has('email') ? 'error' : '' }}"
                placeholder="nama@email.com" required autofocus autocomplete="email">
         @error('email')
-        <div class="form-error">
-            <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ $message }}
-        </div>
+        <div class="form-error">{{ $message }}</div>
         @enderror
     </div>
 

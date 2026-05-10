@@ -31,13 +31,16 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['email' => 'Email atau password salah.'])->withInput($request->only('email'));
+            $failures = session()->get('login_failures', 0) + 1;
+            session()->put('login_failures', $failures);
+            return back()->withErrors(['login_failed' => 'Email atau password yang Anda masukkan salah.'])->withInput($request->only('email'));
         }
 
         if (!$user->is_active) {
-            return back()->withErrors(['email' => 'Akun Anda telah dinonaktifkan. Hubungi administrator.'])->withInput($request->only('email'));
+            return back()->withErrors(['login_failed' => 'Akun Anda telah dinonaktifkan. Hubungi administrator.'])->withInput($request->only('email'));
         }
 
+        session()->forget('login_failures');
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 

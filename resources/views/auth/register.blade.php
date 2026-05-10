@@ -9,7 +9,60 @@
 </div>
 
 
-<form method="POST" action="{{ route('register') }}" x-data="{ loading: false }" @submit="loading = true">
+<form method="POST" action="{{ route('register') }}" 
+    x-data="{ 
+        loading: false,
+        email: '{{ old('email') }}',
+        phone: '{{ old('phone') }}',
+        nik: '{{ old('nik') }}',
+        password: '',
+        password_confirmation: '',
+        
+        emailTouched: false,
+        phoneTouched: false,
+        nikTouched: false,
+        passwordTouched: false,
+        confirmTouched: false,
+
+        get emailError() {
+            if (!this.emailTouched) return '';
+            if (!this.email) return 'Email wajib diisi.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) return 'Format email tidak valid.';
+            return '';
+        },
+        get phoneError() {
+            if (!this.phoneTouched || !this.phone) return '';
+            if (!/^[0-9]{10,13}$/.test(this.phone)) return 'No. HP harus berisi 10-13 digit angka.';
+            return '';
+        },
+        get nikError() {
+            if (!this.nikTouched) return '';
+            if (!this.nik) return 'NIK wajib diisi.';
+            if (!/^[0-9]{16}$/.test(this.nik)) return 'NIK harus tepat 16 digit angka.';
+            return '';
+        },
+        get passwordError() {
+            if (!this.passwordTouched) return '';
+            if (!this.password) return 'Password wajib diisi.';
+            if (this.password.length < 8) return 'Password minimal 8 karakter.';
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(this.password)) return 'Harus mengandung huruf besar, huruf kecil, dan angka.';
+            return '';
+        },
+        get confirmError() {
+            if (!this.confirmTouched) return '';
+            if (this.password_confirmation !== this.password) return 'Konfirmasi password tidak cocok.';
+            return '';
+        },
+        get isFormValid() {
+            const isEmailValid = this.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+            const isPhoneValid = !this.phone || /^[0-9]{10,13}$/.test(this.phone);
+            const isNikValid = this.nik && /^[0-9]{16}$/.test(this.nik);
+            const isPasswordValid = this.password && this.password.length >= 8 && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(this.password);
+            const isConfirmValid = this.password_confirmation && this.password_confirmation === this.password;
+            return isEmailValid && isPhoneValid && isNikValid && isPasswordValid && isConfirmValid;
+        }
+    }" 
+    @submit="if(!isFormValid) { $event.preventDefault(); emailTouched=phoneTouched=nikTouched=passwordTouched=confirmTouched=true; } else { loading = true; }">
     @csrf
 
     <div class="form-group">
@@ -23,25 +76,28 @@
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
         <div class="form-group">
             <label for="email" class="form-label">Email <span style="color:#ef4444;">*</span></label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}"
-                   class="form-input {{ $errors->has('email') ? 'error' : '' }}"
+            <input type="email" id="email" name="email" x-model="email" @blur="emailTouched = true" @input="emailTouched = true"
+                   class="form-input" :class="{'error': emailError || {{ $errors->has('email') ? 'true' : 'false' }}}"
                    placeholder="email@domain.com" required>
-            @error('email')<div class="form-error">{{ $message }}</div>@enderror
+            <div class="form-error" x-show="emailError" x-text="emailError" x-cloak></div>
+            @error('email')<div class="form-error" x-show="!emailError">{{ $message }}</div>@enderror
         </div>
         <div class="form-group">
             <label for="phone" class="form-label">No. HP</label>
-            <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
-                   class="form-input" placeholder="08xxxxxxxxxx">
+            <input type="tel" id="phone" name="phone" x-model="phone" @blur="phoneTouched = true" @input="phoneTouched = true"
+                   class="form-input" :class="{'error': phoneError}" placeholder="08xxxxxxxxxx">
+            <div class="form-error" x-show="phoneError" x-text="phoneError" x-cloak></div>
         </div>
     </div>
 
     <div class="form-group">
         <label for="nik" class="form-label">NIK (16 Digit) <span style="color:#ef4444;">*</span></label>
-        <input type="text" id="nik" name="nik" value="{{ old('nik') }}"
-               class="form-input {{ $errors->has('nik') ? 'error' : '' }}"
+        <input type="text" id="nik" name="nik" x-model="nik" @blur="nikTouched = true" @input="nikTouched = true"
+               class="form-input" :class="{'error': nikError || {{ $errors->has('nik') ? 'true' : 'false' }}}"
                placeholder="3201xxxxxxxxxxxx" maxlength="16" pattern="[0-9]{16}" required>
         <div class="form-hint">Nomor Induk Kependudukan sesuai KTP</div>
-        @error('nik')<div class="form-error">{{ $message }}</div>@enderror
+        <div class="form-error" x-show="nikError" x-text="nikError" x-cloak></div>
+        @error('nik')<div class="form-error" x-show="!nikError">{{ $message }}</div>@enderror
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -71,8 +127,8 @@
     <div class="form-group" x-data="{ showPass: false }">
         <label for="password" class="form-label">Password <span style="color:#ef4444;">*</span></label>
         <div style="position:relative;">
-            <input :type="showPass ? 'text' : 'password'" id="password" name="password"
-                   class="form-input {{ $errors->has('password') ? 'error' : '' }}"
+            <input :type="showPass ? 'text' : 'password'" id="password" name="password" x-model="password" @blur="passwordTouched = true" @input="passwordTouched = true; if(confirmTouched) confirmTouched=true;"
+                   class="form-input" :class="{'error': passwordError || {{ $errors->has('password') ? 'true' : 'false' }}}"
                    placeholder="Min. 8 karakter, huruf besar & angka" required style="padding-right:2.75rem;">
             <button type="button" @click="showPass = !showPass"
                     style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;">
@@ -80,13 +136,15 @@
                 <svg x-show="showPass" x-cloak style="width:1.125rem;height:1.125rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
             </button>
         </div>
-        @error('password')<div class="form-error">{{ $message }}</div>@enderror
+        <div class="form-error" x-show="passwordError" x-text="passwordError" x-cloak></div>
+        @error('password')<div class="form-error" x-show="!passwordError">{{ $message }}</div>@enderror
     </div>
 
     <div class="form-group">
         <label for="password_confirmation" class="form-label">Konfirmasi Password <span style="color:#ef4444;">*</span></label>
-        <input type="password" id="password_confirmation" name="password_confirmation"
-               class="form-input" placeholder="Ulangi password" required>
+        <input type="password" id="password_confirmation" name="password_confirmation" x-model="password_confirmation" @blur="confirmTouched = true" @input="confirmTouched = true"
+               class="form-input" :class="{'error': confirmError}" placeholder="Ulangi password" required>
+        <div class="form-error" x-show="confirmError" x-text="confirmError" x-cloak></div>
     </div>
 
     <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" :disabled="loading">

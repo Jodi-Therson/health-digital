@@ -12,7 +12,15 @@
         <h1 class="page-title">Detail Antrian</h1>
         <p class="page-subtitle">{{ $antrian->no_antrian }}</p>
     </div>
-    <a href="{{ route('pasien.antrian.index') }}" class="btn btn-secondary">← Kembali</a>
+    <div style="display:flex;gap:0.75rem;">
+        <a href="{{ route('pasien.antrian.index') }}" class="btn btn-secondary">← Kembali</a>
+        @if($antrian->status === 'menunggu')
+        <form method="POST" action="{{ route('pasien.antrian.update', $antrian->id) }}" onsubmit="return confirm('Anda yakin ingin membatalkan antrian ini?');">
+            @csrf @method('PUT')
+            <button type="submit" name="action" value="batal" class="btn" style="background:#fee2e2;color:#ef4444;border:1px solid #fca5a5;">Batalkan Antrian</button>
+        </form>
+        @endif
+    </div>
 </div>
 
 <!-- Nomor antrian hero -->

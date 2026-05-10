@@ -26,27 +26,38 @@
         <div class="card">
             <div class="card-header">Pilih Layanan & Dokter</div>
             <div class="card-body">
-                <div class="form-group">
-                    <label for="layanan_id" class="form-label">Layanan <span style="color:#ef4444;">*</span></label>
-                    <select id="layanan_id" name="layanan_id" class="form-input {{ $errors->has('layanan_id') ? 'error' : '' }}" required>
-                        <option value="">-- Pilih Layanan --</option>
-                        @foreach($layanans as $l)
-                        <option value="{{ $l->id }}" {{ old('layanan_id') == $l->id ? 'selected' : '' }}>Poli {{ $l->nama }}</option>
-                        @endforeach
-                    </select>
-                    @error('layanan_id')<div class="form-error">{{ $message }}</div>@enderror
-                </div>
-                <div class="form-group">
-                    <label for="dokter_id" class="form-label">Dokter <span style="color:#ef4444;">*</span></label>
-                    <select id="dokter_id" name="dokter_id" class="form-input {{ $errors->has('dokter_id') ? 'error' : '' }}" required>
-                        <option value="">-- Pilih Dokter --</option>
-                        @foreach($dokters as $d)
-                        <option value="{{ $d->id }}" {{ old('dokter_id') == $d->id ? 'selected' : '' }}>
-                            {{ $d->user->name }} — {{ $d->spesialisasi }}
-                        </option>
-                        @endforeach
-                    </select>
-                    @error('dokter_id')<div class="form-error">{{ $message }}</div>@enderror
+                <div x-data="{
+                    selectedLayanan: '{{ old('layanan_id') }}',
+                    selectedDokter: '{{ old('dokter_id') }}',
+                    dokters: {{ json_encode($dokters->map(fn($d) => ['id' => $d->id, 'name' => $d->user->name, 'spesialisasi' => $d->spesialisasi])) }},
+                    layanans: {{ json_encode($layanans->map(fn($l) => ['id' => $l->id, 'nama' => strtolower($l->nama)])) }},
+                    get filteredDokters() {
+                        if(!this.selectedLayanan) return [];
+                        const lay = this.layanans.find(l => l.id == this.selectedLayanan);
+                        if(!lay) return [];
+                        return this.dokters.filter(d => d.spesialisasi.toLowerCase().includes(lay.nama));
+                    }
+                }" x-init="$watch('selectedLayanan', value => { selectedDokter = '' })">
+                    <div class="form-group">
+                        <label for="layanan_id" class="form-label">Layanan <span style="color:#ef4444;">*</span></label>
+                        <select id="layanan_id" name="layanan_id" class="form-input {{ $errors->has('layanan_id') ? 'error' : '' }}" required x-model="selectedLayanan">
+                            <option value="">-- Pilih Layanan --</option>
+                            @foreach($layanans as $l)
+                            <option value="{{ $l->id }}">Poli {{ $l->nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('layanan_id')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="dokter_id" class="form-label">Dokter <span style="color:#ef4444;">*</span></label>
+                        <select id="dokter_id" name="dokter_id" class="form-input {{ $errors->has('dokter_id') ? 'error' : '' }}" required x-model="selectedDokter">
+                            <option value="">-- Pilih Dokter --</option>
+                            <template x-for="d in filteredDokters" :key="d.id">
+                                <option :value="d.id" x-text="d.name + ' — ' + d.spesialisasi" :selected="d.id == selectedDokter"></option>
+                            </template>
+                        </select>
+                        @error('dokter_id')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="tanggal" class="form-label">Tanggal Kunjungan <span style="color:#ef4444;">*</span></label>

@@ -59,11 +59,12 @@ class AntrianController extends Controller
             'status'     => 'menunggu',
         ]);
 
-        $layanan = Layanan::find($request->layanan_id);
+        $dokter = Dokter::find($request->dokter_id);
         \App\Models\Pembayaran::create([
             'antrian_id' => $antrian->id,
+            'pasien_id'  => $request->pasien_id,
             'kode_invoice' => 'INV-' . time() . '-' . rand(100, 999),
-            'jumlah' => $layanan ? $layanan->harga_dasar : 0,
+            'jumlah' => $dokter ? $dokter->tarif_konsultasi : 0,
             'status' => 'menunggu',
             'metode' => 'transfer',
         ]);

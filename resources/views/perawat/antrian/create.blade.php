@@ -21,24 +21,35 @@
                 </select>
                 @error('pasien_id')<div class="form-error">{{ $message }}</div>@enderror
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" x-data="{
+                selectedLayanan: '{{ old('layanan_id') }}',
+                selectedDokter: '{{ old('dokter_id') }}',
+                dokters: {{ json_encode($dokters->map(fn($d) => ['id' => $d->id, 'name' => $d->user->name, 'spesialisasi' => $d->spesialisasi])) }},
+                layanans: {{ json_encode($layanans->map(fn($l) => ['id' => $l->id, 'nama' => strtolower($l->nama)])) }},
+                get filteredDokters() {
+                    if(!this.selectedLayanan) return [];
+                    const lay = this.layanans.find(l => l.id == this.selectedLayanan);
+                    if(!lay) return [];
+                    return this.dokters.filter(d => d.spesialisasi.toLowerCase().includes(lay.nama));
+                }
+            }" x-init="$watch('selectedLayanan', value => { selectedDokter = '' })">
                 <div class="form-group">
                     <label class="form-label">Layanan <span style="color:#ef4444;">*</span></label>
-                    <select name="layanan_id" class="form-input {{ $errors->has('layanan_id')?'error':'' }}" required>
+                    <select name="layanan_id" class="form-input {{ $errors->has('layanan_id')?'error':'' }}" required x-model="selectedLayanan">
                         <option value="">-- Pilih Layanan --</option>
                         @foreach($layanans as $l)
-                        <option value="{{ $l->id }}" {{ old('layanan_id')==$l->id?'selected':'' }}>{{ $l->nama }}</option>
+                        <option value="{{ $l->id }}">{{ $l->nama }}</option>
                         @endforeach
                     </select>
                     @error('layanan_id')<div class="form-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="form-group">
                     <label class="form-label">Dokter <span style="color:#ef4444;">*</span></label>
-                    <select name="dokter_id" class="form-input {{ $errors->has('dokter_id')?'error':'' }}" required>
+                    <select name="dokter_id" class="form-input {{ $errors->has('dokter_id')?'error':'' }}" required x-model="selectedDokter">
                         <option value="">-- Pilih Dokter --</option>
-                        @foreach($dokters as $d)
-                        <option value="{{ $d->id }}" {{ old('dokter_id')==$d->id?'selected':'' }}>{{ $d->user->name }}</option>
-                        @endforeach
+                        <template x-for="d in filteredDokters" :key="d.id">
+                            <option :value="d.id" x-text="d.name + ' — ' + d.spesialisasi" :selected="d.id == selectedDokter"></option>
+                        </template>
                     </select>
                     @error('dokter_id')<div class="form-error">{{ $message }}</div>@enderror
                 </div>

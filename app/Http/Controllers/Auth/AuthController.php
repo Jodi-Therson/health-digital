@@ -8,7 +8,7 @@ use App\Models\Pasien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+
 
 class AuthController extends Controller
 {
@@ -61,7 +61,7 @@ class AuthController extends Controller
         $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|unique:users',
-            'password'      => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'password'      => ['required', 'confirmed', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'],
             'phone'         => 'nullable|string|max:20',
             'nik'           => 'required|string|size:16|unique:pasiens',
             'tanggal_lahir' => 'required|date|before:today',
@@ -69,12 +69,21 @@ class AuthController extends Controller
             'alamat'        => 'nullable|string|max:500',
         ], [
             'name.required'          => 'Nama lengkap wajib diisi.',
-            'email.unique'           => 'Email sudah terdaftar. Silakan login.',
+            'name.max'               => 'Nama tidak boleh lebih dari 255 karakter.',
+            'email.required'         => 'Email wajib diisi.',
+            'email.email'            => 'Format email tidak valid.',
+            'email.unique'           => 'Email sudah terdaftar. Silakan masuk (login).',
+            'password.required'      => 'Password wajib diisi.',
             'password.confirmed'     => 'Konfirmasi password tidak cocok.',
+            'password.min'           => 'Password minimal 8 karakter.',
+            'password.regex'         => 'Password harus mengandung setidaknya satu huruf besar, satu huruf kecil, dan satu angka.',
             'nik.required'           => 'NIK wajib diisi.',
-            'nik.size'               => 'NIK harus 16 digit.',
-            'nik.unique'             => 'NIK sudah terdaftar.',
-            'tanggal_lahir.before'   => 'Tanggal lahir tidak valid.',
+            'nik.size'               => 'NIK harus tepat 16 digit angka.',
+            'nik.unique'             => 'NIK ini sudah pernah didaftarkan.',
+            'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
+            'tanggal_lahir.before'   => 'Tanggal lahir tidak boleh hari ini atau di masa depan.',
+            'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
+            'jenis_kelamin.in'       => 'Pilihan jenis kelamin tidak valid.',
         ]);
 
         $user = User::create([

@@ -45,4 +45,9 @@ class DashboardController extends Controller
             'pasien', 'antrians', 'konsultasis', 'pembayarans', 'antrianHariIni'
         ));
     }
+
+    public function bantuan()
+    {
+        return view('pasien.bantuan');
+    }
 }

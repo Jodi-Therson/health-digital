@@ -8,16 +8,6 @@
     <p style="font-size:0.875rem; color:#64748b;">Masuk ke akun HealthDigital Anda</p>
 </div>
 
-@if($errors->any())
-<div class="alert alert-error" style="margin-bottom:1.25rem;">
-    <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    <div>
-        @foreach($errors->all() as $error)
-        <div>{{ $error }}</div>
-        @endforeach
-    </div>
-</div>
-@endif
 
 <form method="POST" action="{{ route('login') }}" x-data="{ loading: false }" @submit="loading = true">
     @csrf

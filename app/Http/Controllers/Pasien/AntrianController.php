@@ -68,11 +68,12 @@ class AntrianController extends Controller
             'status'     => 'menunggu',
         ]);
 
-        $layanan = Layanan::find($request->layanan_id);
+        $dokter = Dokter::find($request->dokter_id);
         \App\Models\Pembayaran::create([
             'antrian_id' => $antrian->id,
+            'pasien_id' => $pasien->id,
             'kode_invoice' => 'INV-' . time() . '-' . rand(100, 999),
-            'jumlah' => $layanan ? $layanan->harga_dasar : 0,
+            'jumlah' => $dokter ? $dokter->tarif_konsultasi : 0,
             'status' => 'menunggu',
             'metode' => 'transfer',
         ]);
@@ -87,5 +88,18 @@ class AntrianController extends Controller
             ->with(['dokter.user', 'layanan', 'rekamMedis', 'pembayaran'])
             ->findOrFail($id);
         return view('pasien.antrian.show', compact('antrian'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $pasien = auth()->user()->pasien;
+        $antrian = Antrian::where('pasien_id', $pasien->id)->findOrFail($id);
+
+        if ($request->action === 'batal') {
+            $this->antrianService->batalkan($antrian);
+            return back()->with('success', 'Antrian berhasil dibatalkan.');
+        }
+
+        return back();
     }
 }

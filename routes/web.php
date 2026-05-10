@@ -23,15 +23,19 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendReset'])->name('password.email');
 });
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profil', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profil', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
 // ── PASIEN ROUTES ──────────────────────────────────────────
 Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->name('pasien.')->group(function () {
     Route::get('/dashboard', [Pasien\DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('antrian', Pasien\AntrianController::class)->only(['index', 'create', 'store', 'show']);
+    Route::get('/bantuan', [Pasien\DashboardController::class, 'bantuan'])->name('bantuan');
+    Route::resource('antrian', Pasien\AntrianController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::get('rekam-medis', [Pasien\RekamMedisController::class, 'index'])->name('rekam-medis.index');
     Route::get('rekam-medis/{id}', [Pasien\RekamMedisController::class, 'show'])->name('rekam-medis.show');
-    Route::resource('konsultasi', Pasien\KonsultasiController::class)->only(['index', 'create', 'store', 'show']);
+    Route::resource('konsultasi', Pasien\KonsultasiController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::resource('pembayaran', Pasien\PembayaranController::class)->only(['index', 'show', 'update']);
     Route::post('pembayaran/{id}/upload', [Pasien\PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
 });

@@ -91,12 +91,24 @@ class UserController extends Controller
             'phone' => 'nullable|string|max:20',
         ]);
 
-        $data = $request->only('name', 'email', 'role', 'phone');
+        $data = $request->only('name', 'email', 'phone');
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
+
+        if ($user->role === 'dokter' && $user->dokter) {
+            $user->dokter->update($request->only('no_str', 'spesialisasi', 'tarif_konsultasi', 'bio'));
+        } elseif ($user->role === 'perawat' && $user->perawat) {
+            $user->perawat->update([
+                'no_str' => $request->no_str,
+                'bagian' => $request->bagian
+            ]);
+        } elseif ($user->role === 'pasien' && $user->pasien) {
+            $user->pasien->update($request->only('nik', 'tanggal_lahir', 'jenis_kelamin', 'alamat'));
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 

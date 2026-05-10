@@ -22,6 +22,11 @@
 </a>
 @endforeach
 <div style="border-top:1px solid #f1f5f9; margin:0.75rem 0.5rem 0; padding-top:0.75rem;">
+    <a href="{{ route('pasien.bantuan') }}" class="sidebar-link {{ request()->routeIs('pasien.bantuan') ? 'active' : '' }}">
+        <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Bantuan & Panduan
+    </a>
+
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="sidebar-link" style="width:100%; color:#ef4444; background:none; border:none; cursor:pointer; text-align:left;">

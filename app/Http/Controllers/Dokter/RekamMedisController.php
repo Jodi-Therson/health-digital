@@ -13,16 +13,30 @@ class RekamMedisController extends Controller
     public function index(Request $request)
     {
         $dokter = auth()->user()->dokter;
-        $query = $dokter->rekamMedis()->with(['pasien.user', 'antrian.layanan']);
+        $search = $request->search;
 
-        if ($request->search) {
-            $query->whereHas('pasien.user', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%');
+        $query = $dokter->rekamMedis()
+            ->with(['pasien.user', 'antrian.layanan'])
+            ->latest('tanggal_periksa');
+
+        if ($search) {
+            $query->whereHas('pasien', function ($q) use ($search) {
+                $q->where('nik', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $search . '%'));
             });
         }
 
-        $rekamMedis = $query->latest('tanggal_periksa')->paginate(15);
-        return view('dokter.rekam-medis.index', compact('rekamMedis'));
+        $allRm = $query->get();
+
+        // Group by pasien_id, keep records sorted terbaru di atas
+        $pasiens = $allRm->groupBy('pasien_id')->map(function ($items) {
+            return [
+                'pasien'     => $items->first()->pasien,
+                'rekamMedis' => $items,   // already sorted desc by tanggal_periksa
+            ];
+        })->values();
+
+        return view('dokter.rekam-medis.index', compact('pasiens', 'search'));
     }
 
     public function create(Request $request)

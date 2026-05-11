@@ -35,6 +35,7 @@ Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->name('pasien.')->g
     Route::resource('antrian', Pasien\AntrianController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::get('rekam-medis', [Pasien\RekamMedisController::class, 'index'])->name('rekam-medis.index');
     Route::get('rekam-medis/{id}', [Pasien\RekamMedisController::class, 'show'])->name('rekam-medis.show');
+    Route::get('rekam-medis/{id}/pdf', [Pasien\RekamMedisController::class, 'downloadPdf'])->name('rekam-medis.pdf');
     Route::resource('konsultasi', Pasien\KonsultasiController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::get('konsultasi/cek-duplikat', [Pasien\KonsultasiController::class, 'cekDuplikat'])->name('konsultasi.cek-duplikat');
     Route::resource('pembayaran', Pasien\PembayaranController::class)->only(['index', 'show', 'update']);

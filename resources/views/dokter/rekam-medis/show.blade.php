@@ -4,9 +4,28 @@
 @section('content')
 <div class="page-header">
     <div><h1 class="page-title">Rekam Medis — {{ $rm->pasien->user->name }}</h1><p class="page-subtitle">{{ $rm->tanggal_periksa->format('d F Y') }}</p></div>
-    <div style="display:flex;gap:0.75rem;">
-        <a href="{{ route('dokter.rekam-medis.edit', $rm->id) }}" class="btn btn-secondary">Edit</a>
+    <div style="display:flex;gap:0.75rem;" x-data="{ showEditConfirm: false }">
+        <button type="button" @click="showEditConfirm = true" class="btn btn-secondary">Edit Rekam Medis</button>
         <a href="{{ route('dokter.rekam-medis.index') }}" class="btn btn-secondary">← Kembali</a>
+
+        {{-- Modal Konfirmasi Edit --}}
+        <div x-show="showEditConfirm" class="modal-backdrop" x-cloak>
+            <div class="modal" @click.away="showEditConfirm = false">
+                <div style="padding:1.5rem;">
+                    <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:1rem;">
+                        <div style="background:#fef3c7;width:2.5rem;height:2.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:1.25rem;height:1.25rem;color:#d97706;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <h3 style="font-size:1.0625rem;font-weight:700;color:#0f172a;">Konfirmasi Edit</h3>
+                    </div>
+                    <p style="font-size:0.875rem;color:#475569;margin-bottom:1.5rem;line-height:1.6;">Anda akan mengedit rekam medis milik <strong>{{ $rm->pasien->user->name }}</strong>. Perubahan akan dicatat dalam sistem.</p>
+                    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                        <button type="button" class="btn btn-secondary" @click="showEditConfirm = false">Batal</button>
+                        <a href="{{ route('dokter.rekam-medis.edit', $rm->id) }}" class="btn btn-primary">Lanjutkan Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;" class="rm-grid">

@@ -3,12 +3,18 @@
 @section('sidebar')@include('dokter._sidebar')@endsection
 @section('content')
 <div class="page-header">
-    <div><h1 class="page-title">Buat Rekam Medis</h1></div>
+    <div>
+        <h1 class="page-title">Buat Rekam Medis</h1>
+        <div id="draft-indicator" style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;display:flex;align-items:center;gap:0.375rem;">
+            <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Draft kosong</span>
+        </div>
+    </div>
     <a href="{{ route('dokter.rekam-medis.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
 @if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
 
-<form method="POST" action="{{ route('dokter.rekam-medis.store') }}" x-data="{loading:false,resep:[{obat:'',dosis:'',aturan:''}]}" @submit="loading=true">
+<form id="rmForm" method="POST" action="{{ route('dokter.rekam-medis.store') }}" x-data="{loading:false, showConfirm:false, resep:[{obat:'',dosis:'',aturan:''}]}" @submit.prevent>
     @csrf
     @if($antrian)
     <input type="hidden" name="antrian_id" value="{{ $antrian->id }}">
@@ -53,19 +59,19 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
                     <div class="form-group">
                         <label class="form-label">Tekanan Darah</label>
-                        <input type="text" name="tekanan_darah" value="{{ old('tekanan_darah') }}" class="form-input" placeholder="120/80">
+                        <input type="text" name="tekanan_darah" value="{{ old('tekanan_darah', $antrian ? $antrian->tekanan_darah : '') }}" class="form-input" placeholder="120/80">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Suhu (°C)</label>
-                        <input type="number" name="suhu_tubuh" value="{{ old('suhu_tubuh') }}" class="form-input" placeholder="36.5" step="0.1" min="30" max="45">
+                        <input type="number" name="suhu_tubuh" value="{{ old('suhu_tubuh', $antrian ? $antrian->suhu_tubuh : '') }}" class="form-input" placeholder="36.5" step="0.1" min="30" max="45">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Berat (kg)</label>
-                        <input type="number" name="berat_badan" value="{{ old('berat_badan') }}" class="form-input" placeholder="65" step="0.1">
+                        <input type="number" name="berat_badan" value="{{ old('berat_badan', $antrian ? $antrian->berat_badan : '') }}" class="form-input" placeholder="65" step="0.1">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Tinggi (cm)</label>
-                        <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan') }}" class="form-input" placeholder="165" step="0.1">
+                        <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan', $antrian ? $antrian->tinggi_badan : '') }}" class="form-input" placeholder="165" step="0.1">
                     </div>
                 </div>
             </div>
@@ -131,11 +137,67 @@
 
     <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;">
         <a href="{{ route('dokter.rekam-medis.index') }}" class="btn btn-secondary">Batal</a>
-        <button type="submit" class="btn btn-primary" :disabled="loading">
-            <span x-show="!loading">Simpan Rekam Medis</span>
+        <button type="button" class="btn btn-primary" @click="showConfirm = true" :disabled="loading">
+            <span x-show="!loading">Selesaikan Pemeriksaan</span>
             <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Menyimpan...</span>
         </button>
     </div>
+
+    <!-- Modal Konfirmasi -->
+    <div x-show="showConfirm" class="modal-backdrop" x-cloak>
+        <div class="modal" @click.away="showConfirm = false">
+            <div style="padding:1.5rem;">
+                <h3 style="font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;color:#0f172a;">Konfirmasi Selesai</h3>
+                <p style="font-size:0.875rem;color:#475569;margin-bottom:1.5rem;">Selesaikan pemeriksaan untuk <strong>{{ $antrian ? $antrian->pasien->user->name : 'Pasien' }}</strong>? Data rekam medis akan dikunci.</p>
+                <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                    <button type="button" class="btn btn-secondary" @click="showConfirm = false">Batal</button>
+                    <button type="button" class="btn btn-primary" @click="showConfirm = false; loading = true; $event.target.closest('form').submit();">Konfirmasi & Selesai</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 <style>@media(max-width:768px){.form-grid{grid-template-columns:1fr !important;}}</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const draftKey = 'rm_draft_{{ $antrian ? $antrian->id : "new" }}';
+    const form = document.getElementById('rmForm');
+    if(!form) return;
+
+    // Load draft
+    const saved = localStorage.getItem(draftKey);
+    if(saved) {
+        try {
+            const draft = JSON.parse(saved);
+            Object.keys(draft).forEach(key => {
+                const el = form.elements[key];
+                if(el && !['antrian_id', 'pasien_id', '_token'].includes(key)) {
+                    el.value = draft[key];
+                }
+            });
+            document.getElementById('draft-indicator').querySelector('span').innerText = 'Draft termuat dari kunjungan sebelumnya';
+        } catch(e) {}
+    }
+
+    // Auto-save every 30 seconds
+    setInterval(() => {
+        const formData = new FormData(form);
+        const draft = {};
+        formData.forEach((val, key) => {
+            if(!key.startsWith('_')) draft[key] = val;
+        });
+        localStorage.setItem(draftKey, JSON.stringify(draft));
+        
+        const now = new Date();
+        const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('draft-indicator').querySelector('span').innerText = 'Tersimpan otomatis pukul ' + time;
+    }, 30000);
+
+    // Clear draft on submit
+    form.addEventListener('submit', () => {
+        localStorage.removeItem(draftKey);
+    });
+});
+</script>
 @endsection

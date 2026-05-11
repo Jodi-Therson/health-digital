@@ -54,6 +54,7 @@ Route::middleware(['auth', 'role:perawat'])->prefix('perawat')->name('perawat.')
     Route::get('/dashboard', [Perawat\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('antrian', Perawat\AntrianController::class)->only(['index', 'show', 'create', 'store']);
     Route::patch('antrian/{id}/panggil', [Perawat\AntrianController::class, 'panggil'])->name('antrian.panggil');
+    Route::patch('antrian/{id}/vital-signs', [Perawat\AntrianController::class, 'simpanVitalSigns'])->name('antrian.vital-signs');
     Route::get('rekam-medis', [Perawat\RekamMedisController::class, 'index'])->name('rekam-medis.index');
     Route::get('rekam-medis/{id}', [Perawat\RekamMedisController::class, 'show'])->name('rekam-medis.show');
     Route::patch('rekam-medis/{id}/catatan', [Perawat\RekamMedisController::class, 'tambahCatatan'])->name('rekam-medis.catatan');

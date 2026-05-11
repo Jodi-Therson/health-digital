@@ -39,7 +39,24 @@
                     <td>
                         <div style="display:flex;gap:0.5rem;">
                             @if($a->status === 'menunggu')
-                            <form method="POST" action="{{ route('perawat.antrian.panggil', $a->id) }}">@csrf @method('PATCH')<button type="submit" class="btn btn-primary btn-sm">Panggil</button></form>
+                            <div x-data="{ showConfirm: false }">
+                                <button type="button" @click="showConfirm = true" class="btn btn-primary btn-sm">Panggil</button>
+                                <div x-show="showConfirm" class="modal-backdrop" x-cloak style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;">
+                                    <div class="modal" @click.away="showConfirm = false">
+                                        <div style="padding:1.5rem;text-align:left;white-space:normal;">
+                                            <h3 style="font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;color:#0f172a;">Konfirmasi Panggil</h3>
+                                            <p style="font-size:0.875rem;color:#475569;margin-bottom:1.5rem;">Panggil <strong>{{ $a->pasien->user->name }}</strong> — No. {{ $a->no_antrian }}?</p>
+                                            <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                                                <button type="button" class="btn btn-secondary" @click="showConfirm = false">Batal</button>
+                                                <form method="POST" action="{{ route('perawat.antrian.panggil', $a->id) }}" style="margin:0;">
+                                                    @csrf @method('PATCH')
+                                                    <button type="submit" class="btn btn-primary">Panggil</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             @endif
                             <a href="{{ route('perawat.antrian.show', $a->id) }}" class="btn btn-secondary btn-sm">Detail</a>
                         </div>

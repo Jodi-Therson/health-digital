@@ -12,6 +12,7 @@ class Antrian extends Model
     protected $fillable = [
         'pasien_id', 'dokter_id', 'layanan_id', 'tanggal',
         'no_antrian', 'keluhan', 'status', 'catatan_perawat',
+        'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu_tubuh',
     ];
 
     protected function casts(): array

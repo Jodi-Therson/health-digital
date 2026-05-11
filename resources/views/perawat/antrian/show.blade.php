@@ -48,25 +48,40 @@
         @endif
     </div>
 
-    <!-- Catatan perawat -->
+    <!-- Vital Signs & Catatan Perawat -->
     <div class="card">
-        <div class="card-header">Catatan Perawat</div>
+        <div class="card-header">Vital Signs & Catatan</div>
         <div class="card-body">
-            @if($antrian->catatan_perawat)
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.625rem;padding:1rem;font-size:0.875rem;color:#334155;line-height:1.6;margin-bottom:1rem;">{{ $antrian->catatan_perawat }}</div>
-            @endif
-            <form method="POST" action="{{ route('perawat.rekam-medis.catatan', $antrian->rekamMedis->id ?? 0) }}" x-data="{loading:false}" @submit="loading=true">
+            @if($antrian->status === 'menunggu')
+            <div class="alert alert-warning" style="background:#fffbeb;color:#b45309;padding:1rem;border-radius:0.5rem;">Panggil pasien terlebih dahulu untuk mengisi vital signs.</div>
+            @else
+            <form method="POST" action="{{ route('perawat.antrian.vital-signs', $antrian->id) }}" x-data="{loading:false}" @submit="loading=true">
                 @csrf @method('PATCH')
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Tekanan Darah (mmHg)</label>
+                        <input type="text" name="tekanan_darah" class="form-input" value="{{ old('tekanan_darah', $antrian->tekanan_darah) }}" placeholder="120/80">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Suhu Tubuh (°C)</label>
+                        <input type="number" step="0.1" name="suhu_tubuh" class="form-input" value="{{ old('suhu_tubuh', $antrian->suhu_tubuh) }}" placeholder="36.5">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Berat Badan (kg)</label>
+                        <input type="number" step="0.1" name="berat_badan" class="form-input" value="{{ old('berat_badan', $antrian->berat_badan) }}" placeholder="60.5">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Tinggi Badan (cm)</label>
+                        <input type="number" step="0.1" name="tinggi_badan" class="form-input" value="{{ old('tinggi_badan', $antrian->tinggi_badan) }}" placeholder="170">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="form-label">{{ $antrian->catatan_perawat ? 'Perbarui' : 'Tambah' }} Catatan</label>
-                    <textarea name="catatan_perawat" rows="4" class="form-input" placeholder="Catatan perawat...">{{ $antrian->catatan_perawat }}</textarea>
+                    <textarea name="catatan_perawat" rows="3" class="form-input" placeholder="Catatan perawat...">{{ old('catatan_perawat', $antrian->catatan_perawat) }}</textarea>
                 </div>
-                @if($antrian->rekamMedis)
-                <button type="submit" class="btn btn-primary" :disabled="loading">Simpan Catatan</button>
-                @else
-                <div class="alert alert-warning">Rekam medis belum dibuat oleh dokter.</div>
-                @endif
+                <button type="submit" class="btn btn-primary" :disabled="loading">Simpan Vital Signs</button>
             </form>
+            @endif
         </div>
     </div>
 </div>

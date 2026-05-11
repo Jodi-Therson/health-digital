@@ -89,4 +89,20 @@ class AntrianController extends Controller
 
         return back()->with('success', 'Pasien ' . $antrian->pasien->user->name . ' berhasil dipanggil.');
     }
+
+    public function simpanVitalSigns(Request $request, $id)
+    {
+        $request->validate([
+            'tekanan_darah' => 'nullable|string|max:20',
+            'berat_badan'   => 'nullable|numeric|min:0',
+            'tinggi_badan'  => 'nullable|numeric|min:0',
+            'suhu_tubuh'    => 'nullable|numeric|min:0',
+            'catatan_perawat' => 'nullable|string',
+        ]);
+
+        $antrian = Antrian::findOrFail($id);
+        $antrian->update($request->only(['tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu_tubuh', 'catatan_perawat']));
+
+        return back()->with('success', 'Vital signs dan catatan berhasil disimpan.');
+    }
 }

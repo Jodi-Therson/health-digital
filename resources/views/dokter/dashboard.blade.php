@@ -50,11 +50,18 @@
                     </div>
                     <div>
                         <div style="font-weight:600;color:#1e293b;">{{ $a->pasien->user->name }}</div>
-                        <div style="font-size:0.8125rem;color:#64748b;">{{ $a->layanan->nama }} • {{ Str::limit($a->keluhan, 40) }}</div>
+                        <div style="font-size:0.8125rem;color:#64748b;margin-bottom:0.25rem;">{{ $a->layanan->nama }} • {{ Str::limit($a->keluhan, 40) }}</div>
+                        @if($a->status === 'dipanggil' && $a->tekanan_darah)
+                        <div style="font-size:0.75rem;gap:0.75rem;color:#0f172a;background:#f8fafc;padding:0.25rem 0.5rem;border-radius:0.375rem;border:1px solid #e2e8f0;display:inline-flex;align-items:center;">
+                            <span><strong style="color:#64748b;font-weight:500;">TD:</strong> {{ $a->tekanan_darah }}</span>
+                            <span><strong style="color:#64748b;font-weight:500;">Suhu:</strong> {{ $a->suhu_tubuh }}°C</span>
+                            <span><strong style="color:#64748b;font-weight:500;">BB/TB:</strong> {{ (float)$a->berat_badan }}kg/{{ (float)$a->tinggi_badan }}cm</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <span class="badge badge-{{ $a->status_badge_color }}">{{ $a->status_label }}</span>
+                    <span class="badge badge-{{ $a->status_badge_color }} {{ $a->status==='dipanggil'?'badge-dipanggil':'' }}">{{ $a->status_label }}</span>
                     @if($a->status === 'menunggu')
                     <form method="POST" action="{{ route('dokter.antrian.status', $a->id) }}">
                         @csrf @method('PATCH')

@@ -84,7 +84,13 @@
     <!-- Konsultasi pending -->
     <div class="card">
         <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>Konsultasi Pending</span>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+                <span>Konsultasi Pending</span>
+                @php $unreadKonsul = $konsultasiPending->filter(fn($k) => !$k->dibaca_dokter)->count(); @endphp
+                @if($unreadKonsul > 0)
+                <span style="background:#ef4444;color:white;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:9999px;">{{ $unreadKonsul }} baru</span>
+                @endif
+            </div>
             <a href="{{ route('dokter.konsultasi.index') }}" style="font-size:0.8125rem;color:#2563eb;text-decoration:none;">Semua →</a>
         </div>
         @if($konsultasiPending->isEmpty())

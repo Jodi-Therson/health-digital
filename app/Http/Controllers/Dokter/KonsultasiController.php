@@ -11,10 +11,14 @@ class KonsultasiController extends Controller
     public function index()
     {
         $dokter = auth()->user()->dokter;
+
+        // Sort: menunggu (terlama) dulu, lalu dijawab, lalu ditutup
         $konsultasis = $dokter->konsultasis()
             ->with('pasien.user')
-            ->latest()
+            ->orderByRaw("FIELD(status, 'menunggu', 'dijawab', 'ditutup')")
+            ->orderBy('created_at', 'asc')  // paling lama menunggu di atas
             ->paginate(15);
+
         return view('dokter.konsultasi.index', compact('konsultasis'));
     }
 
@@ -22,34 +26,51 @@ class KonsultasiController extends Controller
     {
         $dokter = auth()->user()->dokter;
         $konsultasi = Konsultasi::where('dokter_id', $dokter->id)
-            ->with(['pasien.user', 'pesans'])
+            ->with(['pasien.user', 'pasien', 'pesans'])
             ->findOrFail($id);
+
         $konsultasi->update(['dibaca_dokter' => true]);
+
         return view('dokter.konsultasi.show', compact('konsultasi'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'balasan' => 'required|string|min:10',
-            'action'  => 'required|in:dijawab,ditutup',
-        ], [
-            'balasan.min' => 'Balasan minimal 10 karakter.',
+            'action' => 'required|in:dijawab,ditutup',
         ]);
 
-        $dokter = auth()->user()->dokter;
+        $dokter     = auth()->user()->dokter;
         $konsultasi = Konsultasi::where('dokter_id', $dokter->id)->findOrFail($id);
+
+        // Bila hanya tutup (tanpa balas), balasan bisa kosong
+        $balasan = $request->balasan;
+
+        if ($request->action === 'dijawab') {
+            $request->validate([
+                'balasan' => 'required|string|min:10',
+            ], [
+                'balasan.min' => 'Balasan minimal 10 karakter.',
+            ]);
+        }
 
         $konsultasi->update([
             'status'        => $request->action,
             'dibaca_pasien' => false,
         ]);
 
-        $konsultasi->pesans()->create([
-            'pengirim' => 'dokter',
-            'pesan' => $request->balasan,
-        ]);
+        // Simpan pesan balasan (hanya jika ada konten bermakna)
+        if ($balasan && $balasan !== '-') {
+            $konsultasi->pesans()->create([
+                'pengirim' => 'dokter',
+                'pesan'    => $balasan,
+            ]);
+        }
 
-        return redirect()->route('dokter.konsultasi.index')->with('success', 'Balasan konsultasi berhasil dikirim.');
+        $msg = $request->action === 'ditutup'
+            ? 'Konsultasi berhasil ditutup.'
+            : 'Balasan berhasil dikirim.';
+
+        return redirect()->route('dokter.konsultasi.index')->with('success', $msg);
     }
 }

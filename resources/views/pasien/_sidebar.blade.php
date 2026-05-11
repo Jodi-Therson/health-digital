@@ -16,9 +16,16 @@
     </div>
 </div>
 @foreach($menu as $item)
-<a href="{{ route($item['route']) }}" class="sidebar-link {{ request()->routeIs($item['route'].'*') ? 'active' : '' }}">
+@php $isCurrent = request()->routeIs($item['route'].'*'); @endphp
+<a href="{{ route($item['route']) }}" class="sidebar-link {{ $isCurrent ? 'active' : '' }}" style="position:relative;">
     <svg style="width:1.125rem;height:1.125rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
     {{ $item['label'] }}
+    @if($item['route'] === 'pasien.konsultasi.index')
+    @php $unread = auth()->user()->pasien->konsultasis()->where('status','dijawab')->where('dibaca_pasien', false)->count(); @endphp
+    @if($unread > 0)
+    <span style="margin-left:auto;background:#ef4444;color:white;font-size:0.65rem;font-weight:700;min-width:1.25rem;height:1.25rem;border-radius:9999px;display:flex;align-items:center;justify-content:center;padding:0 0.3rem;">{{ $unread }}</span>
+    @endif
+    @endif
 </a>
 @endforeach
 <div style="border-top:1px solid #f1f5f9; margin:0.75rem 0.5rem 0; padding-top:0.75rem;">

@@ -8,7 +8,22 @@
     <meta name="description" content="Platform Layanan Kesehatan Digital Terpadu">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full" x-data="{ sidebarOpen: false, showLogoutModal: false }">
+<body class="h-full" x-data="{ 
+    sidebarOpen: false, 
+    showLogoutModal: false,
+    showConfirmModal: false,
+    confirmTitle: '',
+    confirmMessage: '',
+    confirmAction: null,
+    confirmColor: 'primary',
+    triggerConfirm(title, message, action, color = 'primary') {
+        this.confirmTitle = title;
+        this.confirmMessage = message;
+        this.confirmAction = action;
+        this.confirmColor = color;
+        this.showConfirmModal = true;
+    }
+}">
 
 <!-- NAVBAR -->
 <nav class="navbar flex items-center justify-between px-4 lg:px-6">
@@ -84,6 +99,29 @@
                     @csrf
                     <button type="submit" class="btn btn-primary" style="width:100%; background:#ef4444; border-color:#ef4444;">Ya, Keluar</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GENERIC CONFIRMATION MODAL -->
+<div x-show="showConfirmModal" class="modal-backdrop" x-cloak x-transition.opacity>
+    <div class="modal" @click.away="showConfirmModal = false" x-transition style="max-width:400px;">
+        <div style="padding:1.5rem; text-align:center;">
+            <div :style="'background:' + (confirmColor === 'danger' ? '#fee2e2' : '#dbeafe') + '; width:3.5rem; height:3.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;'">
+                <svg x-show="confirmColor === 'danger'" style="width:1.75rem;height:1.75rem;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <svg x-show="confirmColor !== 'danger'" style="width:1.75rem;height:1.75rem;color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 x-text="confirmTitle" style="font-size:1.125rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem;"></h3>
+            <p x-text="confirmMessage" style="font-size:0.875rem; color:#64748b; margin-bottom:1.5rem;"></p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <button @click="showConfirmModal = false" class="btn btn-secondary">Batal</button>
+                <button @click="if(confirmAction) { confirmAction(); showConfirmModal = false; }" 
+                        :class="'btn btn-' + confirmColor" 
+                        style="width:100%;" 
+                        :style="confirmColor === 'danger' ? 'background:#ef4444; border-color:#ef4444;' : ''">
+                    Lanjutkan
+                </button>
             </div>
         </div>
     </div>

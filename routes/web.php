@@ -68,7 +68,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', Admin\UserController::class);
     Route::patch('users/{id}/toggle-aktif', [Admin\UserController::class, 'toggleAktif'])->name('users.toggle');
     Route::resource('layanan', Admin\LayananController::class);
-    Route::resource('fasilitas', Admin\FasilitasController::class);
+    Route::resource('fasilitas', Admin\FasilitasController::class)->parameters(['fasilitas' => 'fasilitas']);
     Route::get('pembayaran', [Admin\PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::patch('pembayaran/{id}/verifikasi', [Admin\PembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
     Route::get('laporan', [Admin\LaporanController::class, 'index'])->name('laporan.index');

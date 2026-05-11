@@ -109,6 +109,20 @@
         </div>
         @endif
 
+        @if($errors->any())
+        <div class="alert alert-error fade-in" style="flex-direction:column; align-items:flex-start; gap:0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span style="font-weight:700;">Terdapat kesalahan input:</span>
+            </div>
+            <ul style="margin:0; padding-left:1.5rem; font-size:0.875rem; list-style-type:disc;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         @yield('content')
     </main>
 </div>

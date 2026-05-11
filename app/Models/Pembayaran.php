@@ -11,7 +11,8 @@ class Pembayaran extends Model
 
     protected $fillable = [
         'antrian_id', 'pasien_id', 'kode_invoice', 'jumlah',
-        'metode', 'status', 'bukti_bayar', 'catatan', 'dibayar_pada', 'verified_by',
+        'metode', 'status', 'bukti_bayar', 'catatan', 'alasan_tolak',
+        'dibayar_pada', 'verified_by',
     ];
 
     protected function casts(): array
@@ -29,22 +30,26 @@ class Pembayaran extends Model
     public function getStatusLabelAttribute(): string
     {
         return match($this->status) {
-            'menunggu'     => 'Menunggu Pembayaran',
-            'dibayar'      => 'Lunas',
-            'gagal'        => 'Gagal',
-            'dikembalikan' => 'Dikembalikan',
-            default        => ucfirst($this->status),
+            'menunggu'            => 'Menunggu Pembayaran',
+            'menunggu_verifikasi' => 'Menunggu Verifikasi',
+            'dibayar'             => 'Lunas',
+            'ditolak'             => 'Ditolak',
+            'gagal'               => 'Gagal',
+            'dikembalikan'        => 'Dikembalikan',
+            default               => ucfirst($this->status),
         };
     }
 
     public function getStatusBadgeColorAttribute(): string
     {
         return match($this->status) {
-            'menunggu'     => 'warning',
-            'dibayar'      => 'success',
-            'gagal'        => 'danger',
-            'dikembalikan' => 'info',
-            default        => 'neutral',
+            'menunggu'            => 'warning',
+            'menunggu_verifikasi' => 'info',
+            'dibayar'             => 'success',
+            'ditolak'             => 'danger',
+            'gagal'               => 'danger',
+            'dikembalikan'        => 'neutral',
+            default               => 'neutral',
         };
     }
 

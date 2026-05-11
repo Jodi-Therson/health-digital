@@ -12,7 +12,7 @@
     </div>
     <a href="{{ route('dokter.rekam-medis.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
-@if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
 
 <form id="rmForm" method="POST" action="{{ route('dokter.rekam-medis.store') }}" x-data="{loading:false, showConfirm:false, resep:[{obat:'',dosis:'',aturan:''}]}" @submit.prevent>
     @csrf

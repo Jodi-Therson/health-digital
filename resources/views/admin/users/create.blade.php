@@ -6,7 +6,7 @@
     <div><h1 class="page-title">Tambah Pengguna</h1></div>
     <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
-@if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
 
 <form method="POST" action="{{ route('admin.users.store') }}" x-data="{ role: '{{ old('role', 'pasien') }}', loading: false }" @submit="loading=true">
     @csrf

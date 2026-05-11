@@ -93,12 +93,12 @@
         <div class="card">
             <div class="card-header">Perlu Tindakan</div>
             <div class="card-body" style="padding:0;">
-                <a href="{{ route('admin.pembayaran.index', ['status'=>'menunggu']) }}" style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:#1e293b;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+                <a href="{{ route('admin.pembayaran.index', ['status'=>'menunggu_verifikasi']) }}" style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:#1e293b;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div style="background:#fee2e2;color:#ef4444;width:2rem;height:2rem;border-radius:0.5rem;display:flex;align-items:center;justify-content:center;">
                             <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         </div>
-                        <div style="font-weight:600;font-size:0.875rem;">Verifikasi Pembayaran</div>
+                        <div style="font-weight:600;font-size:0.875rem;">Pembayaran Menunggu Verifikasi</div>
                     </div>
                     @if($pembayaranPending>0)<span class="badge badge-danger">{{ $pembayaranPending }}</span>@endif
                 </a>

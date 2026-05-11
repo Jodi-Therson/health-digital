@@ -89,6 +89,24 @@
 </div>
 @endif
 
+{{-- Widget Tagihan Belum Dibayar --}}
+@if($pembayarans->whereIn('status', ['menunggu', 'ditolak'])->count() > 0)
+<div class="card" style="border-left:4px solid #ef4444; margin-bottom:1.5rem; background:#fff5f5;">
+    <div class="card-body" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:1rem;">
+            <div style="background:#fee2e2; width:3rem; height:3rem; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg style="width:1.5rem;height:1.5rem;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3 1.343 3 3-1.343 3-3 3m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <div style="font-weight:700; color:#991b1b;">Tagihan Belum Dibayar</div>
+                <div style="font-size:0.875rem; color:#b91c1c;">Anda memiliki {{ $pembayarans->whereIn('status', ['menunggu', 'ditolak'])->count() }} tagihan yang perlu diselesaikan.</div>
+            </div>
+        </div>
+        <a href="{{ route('pasien.pembayaran.index') }}" class="btn btn-primary" style="background:#ef4444; border-color:#ef4444;">Lihat Tagihan</a>
+    </div>
+</div>
+@endif
+
 <!-- Stats -->
 <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem;">
     @php $stats = [

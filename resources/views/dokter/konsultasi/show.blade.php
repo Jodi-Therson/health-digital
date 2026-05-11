@@ -101,7 +101,7 @@
             </button>
         </div>
         <div class="card-body">
-            @if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
             <form method="POST" action="{{ route('dokter.konsultasi.update', $konsultasi->id) }}" x-data="{loading:false}" @submit="loading=true" id="formBalas">
                 @csrf @method('PUT')
                 <input type="hidden" name="action" value="dijawab">

@@ -6,7 +6,7 @@
     <div><h1 class="page-title">Edit Pengguna</h1><p class="page-subtitle">{{ $user->name }}</p></div>
     <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
-@if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
 
 <form method="POST" action="{{ route('admin.users.update', $user->id) }}" x-data="{ loading: false }" @submit="loading=true">
     @csrf @method('PUT')

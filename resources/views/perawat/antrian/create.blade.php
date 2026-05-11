@@ -6,7 +6,7 @@
     <div><h1 class="page-title">Tambah Antrian</h1></div>
     <a href="{{ route('perawat.antrian.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
-@if($errors->any())<div class="alert alert-error"><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
 <div class="card" style="max-width:640px;">
     <div class="card-body">
         <form method="POST" action="{{ route('perawat.antrian.store') }}" x-data="{loading:false}" @submit="loading=true">

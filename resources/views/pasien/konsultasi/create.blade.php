@@ -9,7 +9,7 @@
     <div><h1 class="page-title">Konsultasi Baru</h1><p class="page-subtitle">Ajukan pertanyaan kepada dokter pilihan Anda</p></div>
     <a href="{{ route('pasien.konsultasi.index') }}" class="btn btn-secondary">← Kembali</a>
 </div>
-@if($errors->any())<div class="alert alert-error"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div></div>@endif
+
 
 <div class="card" style="max-width:680px;">
     <div class="card-header" style="display:flex;align-items:center;gap:0.75rem;">

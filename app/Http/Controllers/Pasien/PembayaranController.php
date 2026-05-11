@@ -22,7 +22,7 @@ class PembayaranController extends Controller
     {
         $pasien = auth()->user()->pasien;
         $pembayaran = Pembayaran::where('pasien_id', $pasien->id)
-            ->with(['antrian.dokter.user', 'antrian.layanan'])
+            ->with(['antrian.dokter.user', 'antrian.layanan', 'antrian.rekamMedis'])
             ->findOrFail($id);
         return view('pasien.pembayaran.show', compact('pembayaran'));
     }
@@ -30,21 +30,25 @@ class PembayaranController extends Controller
     public function uploadBukti(Request $request, $id)
     {
         $request->validate([
-            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'bukti_bayar' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
         ], [
             'bukti_bayar.required' => 'Bukti pembayaran wajib diupload.',
-            'bukti_bayar.image'    => 'File harus berupa gambar.',
+            'bukti_bayar.mimes'    => 'File harus berupa JPG, PNG, atau PDF.',
             'bukti_bayar.max'      => 'Ukuran file maksimal 2MB.',
         ]);
 
         $pasien = auth()->user()->pasien;
         $pembayaran = Pembayaran::where('pasien_id', $pasien->id)
-            ->where('status', 'menunggu')
+            ->whereIn('status', ['menunggu', 'ditolak'])
             ->findOrFail($id);
 
         $path = $request->file('bukti_bayar')->store('bukti-bayar', 'public');
-        $pembayaran->update(['bukti_bayar' => $path]);
+        $pembayaran->update([
+            'bukti_bayar' => $path,
+            'status'      => 'menunggu_verifikasi',
+            'alasan_tolak'=> null,
+        ]);
 
-        return back()->with('success', 'Bukti pembayaran berhasil diupload. Admin akan memverifikasi segera.');
+        return back()->with('success', 'Bukti pembayaran berhasil dikirim! Admin akan memverifikasi dalam 1×24 jam.');
     }
 }

@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $pendapatanBulanIni = Pembayaran::where('status', 'dibayar')
             ->whereMonth('dibayar_pada', now()->month)
             ->sum('jumlah');
-        $pembayaranPending = Pembayaran::where('status', 'menunggu')->whereNotNull('bukti_bayar')->count();
+        $pembayaranPending = Pembayaran::where('status', 'menunggu_verifikasi')->count();
         $konsultasiPending = Konsultasi::where('status', 'menunggu')->count();
 
         $antriansRecent = Antrian::with(['pasien.user', 'dokter.user', 'layanan'])

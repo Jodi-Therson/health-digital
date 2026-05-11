@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->get();
 
         $pembayarans = $pasien->pembayarans()
-            ->where('status', 'menunggu')
+            ->whereIn('status', ['menunggu', 'ditolak'])
             ->latest()
             ->take(3)
             ->get();

@@ -57,6 +57,7 @@ class UserController extends Controller
                 'no_str'            => $request->no_str,
                 'spesialisasi'      => $request->spesialisasi ?? 'Umum',
                 'tarif_konsultasi'  => $request->tarif_konsultasi ?? 150000,
+                'jadwal'            => $request->jadwal,
                 'bio'               => $request->bio,
             ]);
         } elseif ($request->role === 'perawat' && $request->no_str_perawat) {
@@ -99,7 +100,7 @@ class UserController extends Controller
         $user->update($data);
 
         if ($user->role === 'dokter' && $user->dokter) {
-            $user->dokter->update($request->only('no_str', 'spesialisasi', 'tarif_konsultasi', 'bio'));
+            $user->dokter->update($request->only('no_str', 'spesialisasi', 'tarif_konsultasi', 'jadwal', 'bio'));
         } elseif ($user->role === 'perawat' && $user->perawat) {
             $user->perawat->update([
                 'no_str' => $request->no_str,

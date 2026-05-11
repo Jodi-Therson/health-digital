@@ -44,9 +44,40 @@
                 </div>
                 <!-- Dokter -->
                 <div x-show="role === 'dokter'" style="display:none;">
-                    <div class="form-group"><label class="form-label">Spesialisasi <span style="color:#ef4444;">*</span></label><input type="text" name="spesialisasi" value="{{ old('spesialisasi') }}" class="form-input"></div>
-                    <div class="form-group"><label class="form-label">No. STR <span style="color:#ef4444;">*</span></label><input type="text" name="no_str" value="{{ old('no_str') }}" class="form-input"></div>
-                    <div class="form-group"><label class="form-label">Jadwal Praktik</label><textarea name="jadwal_praktik" class="form-input" rows="2" placeholder="Senin-Jumat 08:00-12:00">{{ old('jadwal_praktik') }}</textarea></div>
+                    <div class="form-group">
+                        <label class="form-label">No. STR <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="no_str" value="{{ old('no_str') }}" class="form-input" placeholder="Nomor Surat Tanda Registrasi">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Spesialisasi <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="spesialisasi" value="{{ old('spesialisasi') }}" class="form-input" placeholder="Contoh: Spesialis Anak">
+                    </div>
+                    <div class="form-group" x-data="{ 
+                        days: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+                        selectedDays: []
+                    }">
+                        <label class="form-label">Jadwal Praktik <span style="color:#ef4444;">*</span></label>
+                        <div style="display:flex; flex-direction:column; gap:0.75rem; background:#f8fafc; padding:1rem; border-radius:0.75rem; border:1px solid #e2e8f0;">
+                            <template x-for="day in days" :key="day">
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+                                    <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; width:100px;">
+                                        <input type="checkbox" :name="'jadwal['+day+'][active]'" value="1" x-model="selectedDays" :value="day">
+                                        <span x-text="day" style="font-size:0.875rem; font-weight:600;"></span>
+                                    </label>
+                                    <div x-show="selectedDays.includes(day)" style="display:flex; align-items:center; gap:0.5rem; flex:1;" x-transition>
+                                        <input type="time" :name="'jadwal['+day+'][start]'" class="form-input" style="padding:0.25rem 0.5rem; width:auto;" value="08:00" :disabled="!selectedDays.includes(day)">
+                                        <span style="color:#64748b;">s/d</span>
+                                        <input type="time" :name="'jadwal['+day+'][end]'" class="form-input" style="padding:0.25rem 0.5rem; width:auto;" value="14:00" :disabled="!selectedDays.includes(day)">
+                                    </div>
+                                    <div x-show="!selectedDays.includes(day)" style="flex:1; color:#cbd5e1; font-size:0.75rem; font-style:italic;">Libur</div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tarif Konsultasi (Rp)</label>
+                        <input type="number" name="tarif_konsultasi" value="{{ old('tarif_konsultasi', 150000) }}" class="form-input">
+                    </div>
                 </div>
                 <!-- Perawat -->
                 <div x-show="role === 'perawat'" style="display:none;">

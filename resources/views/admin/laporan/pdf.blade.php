@@ -25,7 +25,10 @@
     <div class="header">
         <h1>HealthDigital Platform</h1>
         <p>Laporan Operasional & Keuangan</p>
-        <p>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}</p>
+        <div style="margin-top:10px; font-size:12px; color:#1e293b;">
+            Periode: <strong>{{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}</strong><br>
+            Layanan: <strong>{{ $layanan_nama }}</strong> | Dokter: <strong>{{ $dokter_nama }}</strong>
+        </div>
     </div>
 
     <div class="summary-box">
@@ -44,7 +47,35 @@
     </div>
 
     <div class="section">
-        <div class="section-title">Rincian Antrian Selesai ({{ \Carbon\Carbon::parse($startDate)->format('d M') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }})</div>
+        <div class="section-title">Pendapatan per Layanan</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Layanan</th>
+                    <th class="text-right">Jumlah Antrian</th>
+                    <th class="text-right">Total Pendapatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($pendapatanLayanan as $pl)
+                <tr>
+                    <td>Poli {{ $pl['nama'] }}</td>
+                    <td class="text-right">{{ $pl['jumlah_antrian'] }}</td>
+                    <td class="text-right">Rp {{ number_format($pl['total'], 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-right">Total Keseluruhan</th>
+                    <th class="text-right">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Daftar Rincian Antrian</div>
         <table>
             <thead>
                 <tr>
@@ -59,7 +90,7 @@
             <tbody>
                 @foreach($antrians as $a)
                 <tr>
-                    <td>{{ $a->no_antrian }}</td>
+                    <td style="font-family:monospace;">{{ $a->no_antrian }}</td>
                     <td>{{ $a->tanggal->format('d/m/Y') }}</td>
                     <td>{{ $a->pasien->user->name }}</td>
                     <td>{{ $a->dokter->user->name }}</td>
@@ -68,39 +99,9 @@
                 </tr>
                 @endforeach
                 @if($antrians->isEmpty())
-                <tr><td colspan="6" style="text-align:center;">Tidak ada data antrian pada periode ini.</td></tr>
+                <tr><td colspan="6" style="text-align:center; color:#94a3b8;">Tidak ada data antrian pada periode ini.</td></tr>
                 @endif
             </tbody>
-        </table>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Pendapatan per Layanan</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Layanan</th>
-                    <th class="text-right">Jumlah Antrian (Selesai)</th>
-                    <th class="text-right">Total Pendapatan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $totalSemua = 0; @endphp
-                @foreach($pendapatanLayanan as $pl)
-                @php $totalSemua += $pl->total; @endphp
-                <tr>
-                    <td>Poli {{ $pl->nama }}</td>
-                    <td class="text-right">{{ $pl->jumlah_antrian }}</td>
-                    <td class="text-right">Rp {{ number_format($pl->total, 0, ',', '.') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="2" class="text-right">Total Keseluruhan</th>
-                    <th class="text-right">Rp {{ number_format($totalSemua, 0, ',', '.') }}</th>
-                </tr>
-            </tfoot>
         </table>
     </div>
 

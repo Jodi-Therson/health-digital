@@ -8,7 +8,7 @@
     <meta name="description" content="Platform Layanan Kesehatan Digital Terpadu">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full" x-data="{ sidebarOpen: false }">
+<body class="h-full" x-data="{ sidebarOpen: false, showLogoutModal: false }">
 
 <!-- NAVBAR -->
 <nav class="navbar flex items-center justify-between px-4 lg:px-6">
@@ -54,18 +54,40 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         Profil Saya
                     </a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" style="width:100%; display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:0.5rem; font-size:0.875rem; color:#ef4444; background:none; border:none; cursor:pointer; text-align:left; transition:background 0.15s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='transparent'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            Keluar
-                        </button>
-                    </form>
+                    <a href="#" style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:0.5rem; font-size:0.875rem; color:#475569; text-decoration:none; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Pengaturan
+                    </a>
+                    <hr style="border:none; border-top:1px solid #f1f5f9; margin:0.25rem 0.5rem;">
+                    <button type="button" @click="showLogoutModal = true; open = false" style="width:100%; display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:0.5rem; font-size:0.875rem; color:#ef4444; background:none; border:none; cursor:pointer; text-align:left; transition:background 0.15s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='transparent'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Keluar
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </nav>
+
+<!-- LOGOUT CONFIRMATION MODAL -->
+<div x-show="showLogoutModal" class="modal-backdrop" x-cloak x-transition.opacity>
+    <div class="modal" @click.away="showLogoutModal = false" x-transition style="max-width:380px;">
+        <div style="padding:1.5rem; text-align:center;">
+            <div style="background:#fee2e2; width:3.5rem; height:3.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                <svg style="width:1.75rem;height:1.75rem;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            </div>
+            <h3 style="font-size:1.125rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem;">Konfirmasi Keluar</h3>
+            <p style="font-size:0.875rem; color:#64748b; margin-bottom:1.5rem;">Anda yakin ingin keluar dari sistem HealthDigital?</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <button @click="showLogoutModal = false" class="btn btn-secondary">Batal</button>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-primary" style="width:100%; background:#ef4444; border-color:#ef4444;">Ya, Keluar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- LAYOUT BODY -->
 <div class="flex" style="min-height: calc(100vh - 4rem);">

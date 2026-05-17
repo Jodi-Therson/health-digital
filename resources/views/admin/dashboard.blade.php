@@ -83,8 +83,8 @@
                 <div style="font-size:0.8125rem;opacity:0.8;">Pendapatan Bulan Ini</div>
                 <div style="font-size:2rem;font-weight:800;margin:0.25rem 0 1rem;">Rp {{ number_format($pendapatanBulanIni, 0, ',', '.') }}</div>
                 <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.2);padding-top:0.75rem;">
-                    <div style="font-size:0.8125rem;opacity:0.9;">Tagihan Pending</div>
-                    <div style="font-weight:700;">{{ $pembayaranPending }}</div>
+                    <div style="font-size:0.8125rem;opacity:0.9;">Total Transaksi Berhasil</div>
+                    <div style="font-weight:700;">{{ \App\Models\Pembayaran::where('status', 'dibayar')->count() }}</div>
                 </div>
             </div>
         </div>
@@ -93,14 +93,13 @@
         <div class="card">
             <div class="card-header">Perlu Tindakan</div>
             <div class="card-body" style="padding:0;">
-                <a href="{{ route('admin.pembayaran.index', ['status'=>'menunggu_verifikasi']) }}" style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:#1e293b;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+                <a href="{{ route('admin.pembayaran.index') }}" style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:#1e293b;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
-                        <div style="background:#fee2e2;color:#ef4444;width:2rem;height:2rem;border-radius:0.5rem;display:flex;align-items:center;justify-content:center;">
+                        <div style="background:#dbeafe;color:#2563eb;width:2rem;height:2rem;border-radius:0.5rem;display:flex;align-items:center;justify-content:center;">
                             <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         </div>
-                        <div style="font-weight:600;font-size:0.875rem;">Pembayaran Menunggu Verifikasi</div>
+                        <div style="font-weight:600;font-size:0.875rem;">Lihat Semua Pembayaran</div>
                     </div>
-                    @if($pembayaranPending>0)<span class="badge badge-danger">{{ $pembayaranPending }}</span>@endif
                 </a>
             </div>
         </div>

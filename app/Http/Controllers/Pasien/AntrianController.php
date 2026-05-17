@@ -70,12 +70,12 @@ class AntrianController extends Controller
 
         $dokter = Dokter::find($request->dokter_id);
         \App\Models\Pembayaran::create([
-            'antrian_id' => $antrian->id,
-            'pasien_id' => $pasien->id,
-            'kode_invoice' => 'INV-' . time() . '-' . rand(100, 999),
-            'jumlah' => $dokter ? $dokter->tarif_konsultasi : 0,
-            'status' => 'menunggu',
-            'metode' => 'transfer',
+            'antrian_id'   => $antrian->id,
+            'pasien_id'    => $pasien->id,
+            'kode_invoice' => 'INV-' . date('Ymd') . '-' . str_pad(\App\Models\Pembayaran::whereDate('created_at', today())->count() + 1, 6, '0', STR_PAD_LEFT),
+            'jumlah'       => $dokter ? $dokter->tarif_konsultasi : 0,
+            'status'       => 'menunggu',
+            'metode'       => 'qris',
         ]);
 
         return redirect()->route('pasien.antrian.index')->with('success', 'Antrian berhasil dibuat! Nomor antrian Anda: ' . $noAntrian);

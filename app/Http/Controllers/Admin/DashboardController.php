@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $pendapatanBulanIni = Pembayaran::where('status', 'dibayar')
             ->whereMonth('dibayar_pada', now()->month)
             ->sum('jumlah');
-        $pembayaranPending = Pembayaran::where('status', 'menunggu_verifikasi')->count();
+
         $konsultasiPending = Konsultasi::where('status', 'menunggu')->count();
 
         $antriansRecent = Antrian::with(['pasien.user', 'dokter.user', 'layanan'])
@@ -42,7 +42,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalPasien', 'totalDokter', 'totalPerawat',
             'antrianHariIni', 'antriansAktif', 'pendapatanBulanIni',
-            'pembayaranPending', 'konsultasiPending',
+            'konsultasiPending',
             'antriansRecent', 'chartData'
         ));
     }

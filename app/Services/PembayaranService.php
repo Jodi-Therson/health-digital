@@ -30,14 +30,5 @@ class PembayaranService
         ]);
     }
 
-    public function verifikasi(Pembayaran $pembayaran, int $adminId): bool
-    {
-        if ($pembayaran->status !== 'menunggu') return false;
-        $pembayaran->update([
-            'status'      => 'dibayar',
-            'verified_by' => $adminId,
-            'dibayar_pada' => now(),
-        ]);
-        return true;
-    }
 }
+

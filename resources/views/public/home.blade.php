@@ -6,79 +6,43 @@
 @section('content')
 
 <!-- HERO SECTION -->
-<section class="hero-section" style="padding:5rem 1.5rem;">
+<section class="hero-section" style="position:relative; background-image: url('{{ asset('images/hero.png') }}'); background-size: cover; background-position: center; padding: 6rem 1.5rem;">
     <div style="max-width:1280px; margin:0 auto; position:relative; z-index:1;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center;" class="hero-grid">
-            <div>
-                <div style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.15); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.25); border-radius:9999px; padding:0.375rem 0.875rem; margin-bottom:1.5rem;">
-                    <div style="width:0.5rem;height:0.5rem;background:#10b981;border-radius:50%;animation:blink 1.5s ease-in-out infinite;"></div>
-                    <span style="font-size:0.8125rem; color:white; font-weight:500;">Layanan 24/7 Tersedia</span>
-                </div>
-                <h1 style="font-size:clamp(2rem, 4vw, 3rem); font-weight:800; color:white; line-height:1.15; margin-bottom:1.25rem; letter-spacing:-0.025em;">
-                    Layanan Kesehatan<br>
-                    <span style="color:#bfdbfe;">Digital Terpadu</span>
-                </h1>
-                <p style="font-size:1.125rem; color:rgba(255,255,255,0.85); line-height:1.7; margin-bottom:2rem; max-width:480px;">
-                    Akses layanan kesehatan lebih mudah, cepat, dan efisien. Daftar antrian online, konsultasi dokter, dan kelola rekam medis Anda dari mana saja.
-                </p>
-                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                    <a href="{{ route('register') }}" class="btn" style="background:white; color:#2563eb; font-size:1rem; padding:0.75rem 1.75rem; box-shadow:0 4px 16px rgba(0,0,0,0.15);">
-                        <svg style="width:1.125rem;height:1.125rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                        Daftar Sekarang
-                    </a>
-                    <a href="{{ route('layanan') }}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border:1.5px solid rgba(255,255,255,0.4); font-size:1rem; padding:0.75rem 1.75rem; backdrop-filter:blur(8px);">
-                        Lihat Layanan
-                    </a>
-                </div>
-
-                <!-- Quick Stats — dynamic from DB -->
-                <div style="display:flex; gap:2rem; margin-top:2.5rem; flex-wrap:wrap;">
-                    <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalPasien > 0 ? $totalPasien.'+' : '—' }}</div>
-                        <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Pasien Terdaftar</div>
-                    </div>
-                    <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalDokter > 0 ? $totalDokter.'+' : '—' }}</div>
-                        <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Dokter Spesialis</div>
-                    </div>
-                    <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalLayanan }}</div>
-                        <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Layanan Medis</div>
-                    </div>
-                </div>
+        <div style="max-width:680px; background:rgba(255, 255, 255, 0.65); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.35); border-radius:1.5rem; padding:3rem 2.5rem; box-shadow:0 20px 50px rgba(15,23,42,0.12);">
+            <div style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(37, 99, 235, 0.08); border:1px solid rgba(37, 99, 235, 0.15); border-radius:9999px; padding:0.375rem 0.875rem; margin-bottom:1.5rem;">
+                <div style="width:0.5rem;height:0.5rem;background:#10b981;border-radius:50%;animation:blink 1.5s ease-in-out infinite;"></div>
+                <span style="font-size:0.8125rem; color:#1d4ed8; font-weight:600;">Layanan 24/7 Tersedia</span>
+            </div>
+            <h1 style="font-size:clamp(2rem, 4vw, 3.25rem); font-weight:800; color:#0f172a; line-height:1.15; margin-bottom:1.25rem; letter-spacing:-0.025em;">
+                Layanan Kesehatan<br>
+                <span style="color:#2563eb;">Digital Terpadu</span>
+            </h1>
+            <p style="font-size:1.0625rem; color:#334155; line-height:1.7; margin-bottom:2rem; max-width:540px; font-weight: 500;">
+                Akses layanan kesehatan lebih mudah, cepat, dan efisien. Daftar antrian online, konsultasi dokter, dan kelola rekam medis Anda dari mana saja.
+            </p>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+                <a href="{{ route('register') }}" class="btn" style="background:#2563eb; color:white; font-size:1rem; padding:0.75rem 1.75rem; box-shadow:0 4px 16px rgba(37, 99, 235, 0.25);">
+                    <svg style="width:1.125rem;height:1.125rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                    Daftar Sekarang
+                </a>
+                <a href="{{ route('layanan') }}" class="btn" style="background:rgba(255,255,255,0.85); color:#334155; border:1.5px solid #cbd5e1; font-size:1rem; padding:0.75rem 1.75rem; backdrop-filter:blur(8px);">
+                    Lihat Layanan
+                </a>
             </div>
 
-            <!-- Hero image (ganti file public/images/hero.jpg sesuai kebutuhan) -->
-            <div style="display:flex; justify-content:center; align-items:center;">
-                <img
-                    id="hero-img"
-                    src="{{ asset('images/hero.png') }}"
-                    alt="Layanan Kesehatan Digital HealthDigital"
-                    style="width:100%; max-width:480px; border-radius:1.5rem; box-shadow:0 20px 60px rgba(0,0,0,0.25); object-fit:cover; aspect-ratio:4/3;"
-                    onerror="this.style.display='none'; document.getElementById('hero-fallback').style.display='flex';"
-                >
-                {{-- Fallback jika hero.jpg belum ada --}}
-                <div id="hero-fallback" style="display:none; background:rgba(255,255,255,0.12); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.2); border-radius:1.5rem; padding:2rem; max-width:380px; width:100%; flex-direction:column; gap:1rem;">
-                    <div style="background:white; border-radius:1rem; padding:1.25rem; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-                            <span style="font-size:0.75rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Nomor Antrian</span>
-                            <span class="badge badge-info" style="animation:blink 1.5s ease-in-out infinite;">● Dipanggil</span>
-                        </div>
-                        <div style="font-size:2.5rem; font-weight:800; color:#2563eb; font-family:monospace; text-align:center; letter-spacing:0.1em;">UMU-001</div>
-                        <div style="text-align:center; font-size:0.8125rem; color:#64748b; margin-top:0.5rem;">Antrian Online — HealthDigital</div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                        <div style="background:rgba(255,255,255,0.8); border-radius:0.75rem; padding:0.875rem; text-align:center;">
-                            <svg style="width:1.5rem;height:1.5rem;color:#10b981;margin:0 auto 0.375rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <div style="font-size:0.75rem; font-weight:600; color:#334155;">Rekam Medis</div>
-                            <div style="font-size:0.75rem; color:#64748b;">Digital</div>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.8); border-radius:0.75rem; padding:0.875rem; text-align:center;">
-                            <svg style="width:1.5rem;height:1.5rem;color:#2563eb;margin:0 auto 0.375rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                            <div style="font-size:0.75rem; font-weight:600; color:#334155;">Konsultasi</div>
-                            <div style="font-size:0.75rem; color:#64748b;">Online</div>
-                        </div>
-                    </div>
+            <!-- Quick Stats — dynamic from DB -->
+            <div style="display:flex; gap:2.5rem; margin-top:2.5rem; flex-wrap:wrap; border-top:1px solid rgba(15,23,42,0.08); padding-top:2rem;">
+                <div>
+                    <div style="font-size:1.75rem; font-weight:800; color:#0f172a;">{{ $totalPasien > 0 ? $totalPasien.'+' : '—' }}</div>
+                    <div style="font-size:0.875rem; color:#64748b; font-weight:600;">Pasien Terdaftar</div>
+                </div>
+                <div>
+                    <div style="font-size:1.75rem; font-weight:800; color:#0f172a;">{{ $totalDokter > 0 ? $totalDokter.'+' : '—' }}</div>
+                    <div style="font-size:0.875rem; color:#64748b; font-weight:600;">Dokter Spesialis</div>
+                </div>
+                <div>
+                    <div style="font-size:1.75rem; font-weight:800; color:#0f172a;">{{ $totalLayanan }}</div>
+                    <div style="font-size:0.875rem; color:#64748b; font-weight:600;">Layanan Medis</div>
                 </div>
             </div>
         </div>
@@ -208,12 +172,5 @@
         @endguest
     </div>
 </section>
-
-<style>
-@media (max-width: 768px) {
-    .hero-grid { grid-template-columns: 1fr !important; }
-    #hero-img { max-width: 100% !important; }
-}
-</style>
 
 @endsection

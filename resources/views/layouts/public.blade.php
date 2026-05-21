@@ -65,16 +65,16 @@
                     <li><a href="{{ route('layanan') }}" style="font-size:0.875rem; color:#94a3b8; text-decoration:none;">Poli Umum</a></li>
                     <li><a href="{{ route('layanan') }}" style="font-size:0.875rem; color:#94a3b8; text-decoration:none;">Poli Gigi</a></li>
                     <li><a href="{{ route('layanan') }}" style="font-size:0.875rem; color:#94a3b8; text-decoration:none;">Poli Anak</a></li>
-                    <li><a href="{{ route('layanan') }}" style="font-size:0.875rem; color:#94a3b8; text-decoration:none;">Laboratorium</a></li>
+                    <li><a href="{{ route('layanan') }}" style="font-size:0.875rem; color:#94a3b8; text-decoration:none;">Poli Kandungan</a></li>
                 </ul>
             </div>
             <div>
                 <h4 style="color:white; font-weight:600; margin-bottom:0.75rem;">Kontak</h4>
                 <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem; font-size:0.875rem;">
-                    <li>📍 Jl. Kesehatan No. 1, Jakarta</li>
+                    <li>📍 Jl. Kesehatan No. 1, Jakarta Pusat 10110</li>
                     <li>📞 (021) 123-4567</li>
                     <li>✉️ info@healthdigital.id</li>
-                    <li>🕒 Senin–Jumat, 07.00–17.00</li>
+                    <li>🕒 Senin–Jumat: 07.00–17.00 | Sabtu: 07.00–12.00</li>
                 </ul>
             </div>
         </div>

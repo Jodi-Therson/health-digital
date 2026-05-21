@@ -14,7 +14,7 @@ class PublicController extends Controller
     {
         $layanans     = Layanan::aktif()->take(6)->get();
         $fasilitas    = Fasilitas::aktif()->take(4)->get();
-        $dokters      = Dokter::with('user')->take(4)->get();
+        $dokters      = Dokter::with('user')->take(5)->get();
         $totalPasien  = User::where('role', 'pasien')->count();
         $totalDokter  = User::where('role', 'dokter')->count();
         $totalLayanan = Layanan::aktif()->count();

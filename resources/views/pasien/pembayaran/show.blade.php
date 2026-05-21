@@ -36,16 +36,21 @@
             <div class="card-header">Rincian Tagihan</div>
             <div class="card-body">
                 <div style="font-size:0.75rem; color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:1rem; letter-spacing:0.05em;">Layanan & Tindakan</div>
-                
+
+                @if($pembayaran->antrian)
+                {{-- Pembayaran untuk Antrian --}}
                 <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #f1f5f9;">
                     <div style="font-size:0.875rem; color:#1e293b;">
                         <div style="font-weight:600;">Jasa Konsultasi Dokter</div>
-                        <div style="font-size:0.75rem; color:#64748b;">{{ optional($pembayaran->antrian->dokter)->user->name }} — {{ optional($pembayaran->antrian->layanan)->nama }}</div>
+                        <div style="font-size:0.75rem; color:#64748b;">
+                            {{ optional($pembayaran->antrian->dokter?->user)->name ?? '—' }}
+                            — {{ optional($pembayaran->antrian->layanan)->nama ?? '—' }}
+                        </div>
                     </div>
                     <div style="font-weight:700; color:#1e293b;">{{ $pembayaran->jumlah_format }}</div>
                 </div>
 
-                @if($pembayaran->antrian->rekamMedis && $pembayaran->antrian->rekamMedis->tindakan)
+                @if(optional($pembayaran->antrian->rekamMedis)->tindakan)
                 <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #f1f5f9;">
                     <div style="font-size:0.875rem; color:#1e293b;">
                         <div style="font-weight:600;">Tindakan Medis</div>
@@ -55,7 +60,7 @@
                 </div>
                 @endif
 
-                @if($pembayaran->antrian->rekamMedis && $pembayaran->antrian->rekamMedis->resep)
+                @if(optional($pembayaran->antrian->rekamMedis)->resep)
                 <div style="margin-top:1rem;">
                     <div style="font-size:0.75rem; color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:0.5rem; letter-spacing:0.05em;">Resep Obat</div>
                     @foreach($pembayaran->antrian->rekamMedis->resep as $r)
@@ -64,6 +69,26 @@
                         <div style="color:#10b981; font-weight:600;">Termasuk</div>
                     </div>
                     @endforeach
+                </div>
+                @endif
+
+                @elseif($pembayaran->konsultasi)
+                {{-- Pembayaran untuk Konsultasi Online --}}
+                <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="font-size:0.875rem; color:#1e293b;">
+                        <div style="font-weight:600;">Biaya Konsultasi Online</div>
+                        <div style="font-size:0.75rem; color:#64748b;">
+                            {{ optional($pembayaran->konsultasi->dokter?->user)->name ?? '—' }}
+                            — Konsultasi: {{ Str::limit(optional($pembayaran->konsultasi)->judul, 50) }}
+                        </div>
+                    </div>
+                    <div style="font-weight:700; color:#1e293b;">{{ $pembayaran->jumlah_format }}</div>
+                </div>
+                @else
+                {{-- Fallback --}}
+                <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="font-weight:600; font-size:0.875rem; color:#1e293b;">Layanan Kesehatan</div>
+                    <div style="font-weight:700; color:#1e293b;">{{ $pembayaran->jumlah_format }}</div>
                 </div>
                 @endif
 
@@ -78,12 +103,20 @@
         <div class="card">
             <div class="card-header">Informasi Umum</div>
             <div class="card-body">
-                @php $rows = [
-                    ['l' => 'No. Antrian',      'v' => $pembayaran->antrian->no_antrian],
-                    ['l' => 'Tanggal Antrian',  'v' => $pembayaran->antrian->tanggal->format('d F Y')],
-                    ['l' => 'Metode Pembayaran','v' => $pembayaran->metode_label],
-                    ['l' => 'Dibuat',           'v' => $pembayaran->created_at->format('d M Y, H:i')],
-                ]; @endphp
+                @php
+                    $rows = [];
+                    if ($pembayaran->antrian) {
+                        $rows[] = ['l' => 'No. Antrian',     'v' => $pembayaran->antrian->no_antrian];
+                        $rows[] = ['l' => 'Tanggal Antrian', 'v' => $pembayaran->antrian->tanggal->format('d F Y')];
+                    } elseif ($pembayaran->konsultasi) {
+                        $rows[] = ['l' => 'Jenis',        'v' => 'Konsultasi Online'];
+                        $rows[] = ['l' => 'Judul',        'v' => $pembayaran->konsultasi->judul];
+                        $rows[] = ['l' => 'Dokter',       'v' => optional($pembayaran->konsultasi->dokter?->user)->name ?? '—'];
+                    }
+                    $rows[] = ['l' => 'No. Invoice',       'v' => $pembayaran->kode_invoice];
+                    $rows[] = ['l' => 'Metode Pembayaran', 'v' => $pembayaran->metode_label];
+                    $rows[] = ['l' => 'Dibuat',            'v' => $pembayaran->created_at->format('d M Y, H:i')];
+                @endphp
                 @foreach($rows as $r)
                 <div style="display:flex;gap:1rem;padding:0.625rem 0;border-bottom:1px solid #f1f5f9;">
                     <div style="min-width:150px;font-size:0.8125rem;color:#64748b;font-weight:500;">{{ $r['l'] }}</div>

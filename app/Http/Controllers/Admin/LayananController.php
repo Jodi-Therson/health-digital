@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Layanan;
-use App\Models\Fasilitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LayananController extends Controller
 {
@@ -25,13 +25,22 @@ class LayananController extends Controller
         $request->validate([
             'nama'      => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'ikon'      => 'nullable|string|max:100',
             'urutan'    => 'integer|min:0',
+            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-        Layanan::create($request->only('nama', 'deskripsi', 'ikon', 'urutan', 'is_active') + [
+        $data = $request->only('nama', 'deskripsi', 'urutan') + [
             'is_active' => $request->boolean('is_active', true),
-        ]);
+        ];
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('layanan', 'public');
+        }
+
+        Layanan::create($data);
 
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
@@ -44,23 +53,40 @@ class LayananController extends Controller
     public function update(Request $request, Layanan $layanan)
     {
         $request->validate([
-            'nama'   => 'required|string|max:255',
-            'urutan' => 'integer|min:0',
+            'nama'    => 'required|string|max:255',
+            'urutan'  => 'integer|min:0',
+            'gambar'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-        $layanan->update([
+        $data = [
             'nama'      => $request->nama,
             'deskripsi' => $request->deskripsi,
-            'ikon'      => $request->ikon,
             'urutan'    => $request->urutan ?? 0,
             'is_active' => $request->boolean('is_active'),
-        ]);
+        ];
+
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($layanan->gambar) {
+                Storage::disk('public')->delete($layanan->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('layanan', 'public');
+        }
+
+        $layanan->update($data);
 
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil diperbarui.');
     }
 
     public function destroy(Layanan $layanan)
     {
+        // Hapus gambar dari storage jika ada
+        if ($layanan->gambar) {
+            Storage::disk('public')->delete($layanan->gambar);
+        }
         $layanan->delete();
         return back()->with('success', 'Layanan berhasil dihapus.');
     }

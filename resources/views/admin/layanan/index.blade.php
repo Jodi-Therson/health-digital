@@ -8,14 +8,17 @@
 </div>
 <div class="card">
     @if($layanans->isEmpty())
-    <div class="empty-state"><div style="color:#94a3b8;">Belum ada data layanan</div></div>
+    <div class="empty-state">
+        <svg style="width:3rem;height:3rem;color:#cbd5e1;margin:0 auto 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <div style="color:#94a3b8;">Belum ada data layanan. <a href="{{ route('admin.layanan.create') }}" style="color:#2563eb;">Tambah sekarang →</a></div>
+    </div>
     @else
     <div class="table-container" style="border:none;">
         <table class="data-table">
             <thead>
                 <tr>
                     <th style="width:60px; text-align:center;">Urutan</th>
-                    <th style="width:50px;">Ikon</th>
+                    <th style="width:90px;">Gambar</th>
                     <th>Nama Layanan</th>
                     <th>Deskripsi</th>
                     <th>Status</th>
@@ -27,19 +30,14 @@
                 <tr>
                     <td style="text-align:center; font-weight:700; color:#64748b;">#{{ $l->urutan }}</td>
                     <td>
-                        <div style="background:#f1f5f9; width:2.25rem; height:2.25rem; border-radius:0.5rem; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
-                            @php
-                                $iconMap = [
-                                    'stethoscope' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-                                    'tooth' => 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z',
-                                    'baby' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
-                                    'heart' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',
-                                    'bolt' => 'M13 10V3L4 14h7v7l9-11h-7z'
-                                ];
-                                $iconPath = $iconMap[$l->ikon] ?? $l->ikon ?? 'M13 10V3L4 14h7v7l9-11h-7z';
-                            @endphp
-                            <svg style="width:1.125rem;height:1.125rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $iconPath }}"/></svg>
+                        @if($l->gambar_url)
+                        <img src="{{ $l->gambar_url }}" alt="{{ $l->nama }}"
+                             style="width:56px; height:56px; object-fit:cover; border-radius:0.5rem; border:1px solid #e2e8f0;">
+                        @else
+                        <div style="background:#f1f5f9; width:56px; height:56px; border-radius:0.5rem; display:flex; align-items:center; justify-content:center; color:#94a3b8; border:1px solid #e2e8f0;">
+                            <svg style="width:1.5rem;height:1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
+                        @endif
                     </td>
                     <td>
                         <div style="font-weight:600; color:#1e293b;">{{ $l->nama }}</div>
@@ -51,8 +49,7 @@
                             <input type="hidden" name="nama" value="{{ $l->nama }}">
                             <input type="hidden" name="urutan" value="{{ $l->urutan }}">
                             <input type="hidden" name="is_active" value="{{ $l->is_active ? '0' : '1' }}">
-                            
-                            <button type="button" 
+                            <button type="button"
                                 @click="triggerConfirm(
                                     '{{ $l->is_active ? 'Nonaktifkan Layanan' : 'Aktifkan Layanan' }}',
                                     '{{ $l->is_active ? 'Pasien tidak bisa mendaftar antrian layanan ini setelah dinonaktifkan.' : 'Pasien dapat kembali mendaftar antrian untuk layanan ini.' }}',
@@ -70,10 +67,10 @@
                             <a href="{{ route('admin.layanan.edit', $l->id) }}" class="btn btn-secondary btn-sm">Edit</a>
                             <form method="POST" action="{{ route('admin.layanan.destroy', $l->id) }}" x-ref="deleteForm{{ $l->id }}">
                                 @csrf @method('DELETE')
-                                <button type="button" 
+                                <button type="button"
                                     @click="triggerConfirm(
                                         'Hapus Layanan',
-                                        'Anda yakin ingin menghapus layanan {{ $l->nama }}? Tindakan ini tidak dapat dibatalkan.',
+                                        'Anda yakin ingin menghapus layanan {{ $l->nama }}? Gambar juga akan dihapus. Tindakan ini tidak dapat dibatalkan.',
                                         () => { $refs.deleteForm{{ $l->id }}.submit() },
                                         'danger'
                                     )"

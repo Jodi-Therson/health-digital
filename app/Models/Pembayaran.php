@@ -12,7 +12,7 @@ class Pembayaran extends Model
     use HasFactory;
 
     protected $fillable = [
-        'antrian_id', 'pasien_id', 'kode_invoice', 'reference', 'jumlah',
+        'antrian_id', 'konsultasi_id', 'pasien_id', 'kode_invoice', 'reference', 'jumlah',
         'metode', 'status', 'bukti_bayar', 'catatan', 'alasan_tolak',
         'dibayar_pada', 'verified_by',
     ];
@@ -34,16 +34,24 @@ class Pembayaran extends Model
         ];
     }
 
-    public function antrian() { return $this->belongsTo(Antrian::class); }
-    public function pasien()   { return $this->belongsTo(Pasien::class); }
+    public function antrian()     { return $this->belongsTo(Antrian::class); }
+    public function pasien()       { return $this->belongsTo(Pasien::class); }
+    public function konsultasi()   { return $this->belongsTo(Konsultasi::class); }
 
     public function getStatusLabelAttribute(): string
     {
         return match($this->status) {
             'menunggu' => 'Menunggu Pembayaran',
             'dibayar'  => 'Lunas',
+            'gagal'    => 'Gagal',
+            'dikembalikan' => 'Dikembalikan',
             default    => ucfirst($this->status),
         };
+    }
+
+    public function getJenisAttribute(): string
+    {
+        return $this->konsultasi_id ? 'konsultasi' : 'antrian';
     }
 
     public function getStatusBadgeColorAttribute(): string

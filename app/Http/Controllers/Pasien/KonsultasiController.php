@@ -21,8 +21,9 @@ class KonsultasiController extends Controller
 
     public function create()
     {
+        $layanans = \App\Models\Layanan::aktif()->get();
         $dokters = Dokter::with('user')->get();
-        return view('pasien.konsultasi.create', compact('dokters'));
+        return view('pasien.konsultasi.create', compact('layanans', 'dokters'));
     }
 
     /**

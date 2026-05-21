@@ -22,10 +22,19 @@
         <form method="POST" action="{{ route('pasien.konsultasi.store') }}"
               x-data="{
                 loading: false,
+                selectedLayanan: '{{ old('layanan_id') }}',
                 dokterId: '{{ old('dokter_id') }}',
                 charCount: {{ strlen(old('pesan','')) }},
                 dupAlert: false,
                 dupNama: '',
+                dokters: {{ json_encode($dokters->map(fn($d) => ['id' => $d->id, 'name' => $d->user->name, 'spesialisasi' => $d->spesialisasi, 'avatar' => $d->user->avatar_url, 'tarif' => (float)$d->tarif_konsultasi])) }},
+                layanans: {{ json_encode($layanans->map(fn($l) => ['id' => $l->id, 'nama' => strtolower($l->nama)])) }},
+                get filteredDokters() {
+                    if(!this.selectedLayanan) return [];
+                    const lay = this.layanans.find(l => l.id == this.selectedLayanan);
+                    if(!lay) return [];
+                    return this.dokters.filter(d => d.spesialisasi.toLowerCase().includes(lay.nama));
+                },
                 checkDup() {
                     if (!this.dokterId) { this.dupAlert = false; return; }
                     fetch('/pasien/konsultasi/cek-duplikat?dokter_id=' + this.dokterId)
@@ -36,38 +45,78 @@
                         });
                 }
               }"
+              x-init="$watch('selectedLayanan', value => { dokterId = ''; dupAlert = false }); if(dokterId) { checkDup(); }"
               @submit="loading=true">
             @csrf
 
-            {{-- Pilih Dokter --}}
+            {{-- Pilih Layanan --}}
             <div class="form-group">
-                <label class="form-label">Pilih Dokter <span style="color:#ef4444;">*</span></label>
-                <select name="dokter_id" id="dokter_id" class="form-input {{ $errors->has('dokter_id')?'error':'' }}"
-                        x-model="dokterId" @change="checkDup()" required>
-                    <option value="">-- Pilih Dokter --</option>
-                    @foreach($dokters as $d)
-                    <option value="{{ $d->id }}" {{ old('dokter_id')==$d->id?'selected':'' }}>
-                        {{ $d->user->name }} — {{ $d->spesialisasi }}
-                    </option>
+                <label class="form-label">Pilih Layanan <span style="color:#ef4444;">*</span></label>
+                <select name="layanan_id" class="form-input {{ $errors->has('layanan_id')?'error':'' }}" x-model="selectedLayanan" required>
+                    <option value="">-- Pilih Layanan --</option>
+                    @foreach($layanans as $l)
+                    <option value="{{ $l->id }}">Poli {{ $l->nama }}</option>
                     @endforeach
                 </select>
+                @error('layanan_id')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
+
+            {{-- Pilih Dokter --}}
+            <div class="form-group" x-data="{ dropdownOpen: false }">
+                <label class="form-label">Pilih Dokter <span style="color:#ef4444;">*</span></label>
+                
+                <!-- Custom Visual Dropdown Component -->
+                <div style="position:relative;">
+                    <!-- Trigger Button -->
+                    <button type="button" @click="dropdownOpen = !dropdownOpen" class="form-input" style="display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; background:white; cursor:pointer; min-height:44px; padding:0.5rem 0.875rem; border:1px solid #cbd5e1; border-radius:0.375rem;">
+                        <span x-show="!dokterId" style="color:#94a3b8;">-- Pilih Dokter --</span>
+                        <template x-if="dokterId">
+                            <div style="display:flex; align-items:center; gap:0.625rem;">
+                                <img :src="dokters.find(d => d.id == dokterId)?.avatar" style="width:1.75rem; height:1.75rem; border-radius:50%; object-fit:cover; border:1px solid #bfdbfe;">
+                                <div>
+                                    <span style="font-weight:600; color:#1e293b;" x-text="dokters.find(d => d.id == dokterId)?.name"></span>
+                                    <span style="font-size:0.75rem; color:#64748b; margin-left:0.25rem;" x-text="'— ' + dokters.find(d => d.id == dokterId)?.spesialisasi"></span>
+                                </div>
+                            </div>
+                        </template>
+                        <svg style="width:1rem; height:1rem; color:#64748b;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+
+                    <!-- Hidden Input for Laravel Submission -->
+                    <input type="hidden" name="dokter_id" :value="dokterId" required>
+
+                    <!-- Options Dropdown Card -->
+                    <div x-show="dropdownOpen" @click.outside="dropdownOpen = false" x-cloak x-transition.opacity style="position:absolute; top:108%; left:0; width:100%; background:white; border:1px solid #cbd5e1; border-radius:0.5rem; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); z-index:100; max-height:240px; overflow-y:auto; padding:0.25rem;">
+                        <template x-for="d in filteredDokters" :key="d.id">
+                            <div @click="dokterId = d.id; dropdownOpen = false; checkDup();" style="display:flex; align-items:center; gap:0.75rem; padding:0.625rem 0.875rem; border-radius:0.375rem; cursor:pointer; transition:background 0.2s;" class="dropdown-item" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background=''">
+                                <img :src="d.avatar" style="width:2.25rem; height:2.25rem; border-radius:50%; object-fit:cover; border:1px solid #93c5fd;">
+                                <div style="flex:1;">
+                                    <div style="font-weight:600; color:#1e293b; font-size:0.875rem;" x-text="d.name"></div>
+                                    <div style="font-size:0.75rem; color:#64748b;" x-text="d.spesialisasi"></div>
+                                </div>
+                                <div style="font-size:0.75rem; font-weight:700; color:#10b981;" x-text="'Rp ' + new Intl.NumberFormat('id-ID').format(d.tarif)"></div>
+                            </div>
+                        </template>
+                        <template x-if="filteredDokters.length === 0">
+                            <div style="padding:1rem; text-align:center; color:#94a3b8; font-size:0.875rem; font-style:italic;">Tidak ada dokter tersedia untuk layanan ini.</div>
+                        </template>
+                    </div>
+                </div>
                 @error('dokter_id')<div class="form-error">{{ $message }}</div>@enderror
 
                 {{-- Dokter info card --}}
-                @foreach($dokters as $d)
-                <div id="info-dokter-{{ $d->id }}" style="display:none;margin-top:0.75rem;padding:0.875rem;border:1px solid #bfdbfe;border-radius:0.625rem;background:#eff6ff;gap:0.875rem;" class="dokter-info-card">
-                    <div style="display:flex;align-items:center;gap:0.875rem;">
-                        <img src="{{ $d->user->avatar_url }}" style="width:3rem;height:3rem;border-radius:50%;object-fit:cover;border:2px solid #93c5fd;" alt="{{ $d->user->name }}">
-                        <div>
-                            <div style="font-weight:700;color:#1e3a8a;">{{ $d->user->name }}</div>
-                            <div style="font-size:0.8125rem;color:#2563eb;">{{ $d->spesialisasi }}</div>
-                            @if($d->tarif_konsultasi)
-                            <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Tarif konsultasi: Rp {{ number_format($d->tarif_konsultasi,0,',','.') }}</div>
-                            @endif
+                <template x-if="dokterId">
+                    <div style="margin-top:0.75rem;padding:0.875rem;border:1px solid #bfdbfe;border-radius:0.625rem;background:#eff6ff;display:flex;align-items:center;gap:0.875rem;" class="dokter-info-card">
+                        <div style="display:flex;align-items:center;gap:0.875rem;">
+                            <img :src="dokters.find(d => d.id == dokterId)?.avatar" style="width:3rem;height:3rem;border-radius:50%;object-fit:cover;border:2px solid #93c5fd;" :alt="dokters.find(d => d.id == dokterId)?.name">
+                            <div>
+                                <div style="font-weight:700;color:#1e3a8a;" x-text="dokters.find(d => d.id == dokterId)?.name"></div>
+                                <div style="font-size:0.8125rem;color:#2563eb;" x-text="dokters.find(d => d.id == dokterId)?.spesialisasi"></div>
+                                <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;" x-text="'Tarif Konsultasi: Rp ' + new Intl.NumberFormat('id-ID').format(dokters.find(d => d.id == dokterId)?.tarif || 0)"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
+                </template>
 
                 {{-- Duplicate alert --}}
                 <div x-show="dupAlert" x-cloak style="margin-top:0.75rem;padding:0.875rem 1rem;background:#fffbeb;border:1px solid #fcd34d;border-radius:0.625rem;display:flex;align-items:flex-start;gap:0.75rem;">
@@ -119,25 +168,5 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const select = document.getElementById('dokter_id');
-    function showDokterInfo(val) {
-        document.querySelectorAll('.dokter-info-card').forEach(el => el.style.display = 'none');
-        if (val) {
-            const card = document.getElementById('info-dokter-' + val);
-            if (card) card.style.display = 'flex';
-        }
-    }
-    if (select) {
-        select.addEventListener('change', () => showDokterInfo(select.value));
-        showDokterInfo(select.value); // init on load (old value)
-    }
-    // init char count
-    const textarea = document.querySelector('textarea[name=pesan]');
-    if (textarea) {
-        // Alpine will handle reactivity; just sync on load
-    }
-});
-</script>
+
 @endsection

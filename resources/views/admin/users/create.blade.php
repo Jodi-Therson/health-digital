@@ -8,7 +8,7 @@
 </div>
 
 
-<form method="POST" action="{{ route('admin.users.store') }}" x-data="{ role: '{{ old('role', 'pasien') }}', loading: false }" @submit="loading=true">
+<form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data" x-data="{ role: '{{ old('role', 'pasien') }}', loading: false }" @submit="loading=true">
     @csrf
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="form-grid">
         <div class="card">
@@ -44,6 +44,12 @@
                 </div>
                 <!-- Dokter -->
                 <div x-show="role === 'dokter'" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label">Foto Profil Dokter</label>
+                        <input type="file" name="avatar" class="form-input {{ $errors->has('avatar') ? 'error' : '' }}">
+                        <div class="form-hint">Format: JPEG, PNG, JPG, WEBP. Maksimal 2MB.</div>
+                        @error('avatar')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
                     <div class="form-group">
                         <label class="form-label">No. STR <span style="color:#ef4444;">*</span></label>
                         <input type="text" name="no_str" value="{{ old('no_str') }}" class="form-input" placeholder="Nomor Surat Tanda Registrasi">

@@ -8,7 +8,7 @@
 </div>
 
 
-<form method="POST" action="{{ route('admin.users.update', $user->id) }}" x-data="{ loading: false }" x-ref="editForm" @submit.prevent>
+<form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data" x-data="{ loading: false }" x-ref="editForm" @submit.prevent>
     @csrf @method('PUT')
     <input type="hidden" name="role" value="{{ $user->role }}">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; align-items: start;">
@@ -47,6 +47,15 @@
         <div class="card">
             <div class="card-header">Profil Medis Dokter</div>
             <div class="card-body">
+                <div class="form-group" style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem;">
+                    <img src="{{ $user->avatar_url }}" style="width:4.5rem; height:4.5rem; border-radius:50%; object-fit:cover; border:2px solid #3b82f6; box-shadow:0 4px 10px rgba(59,130,246,0.15);" alt="{{ $user->name }}">
+                    <div style="flex:1;">
+                        <label class="form-label" style="margin-bottom:0.25rem;">Foto Profil Dokter</label>
+                        <input type="file" name="avatar" class="form-input {{ $errors->has('avatar') ? 'error' : '' }}" style="padding:0.375rem 0.75rem;">
+                        <div class="form-hint">Maksimal 2MB. Kosongkan jika tidak ingin mengubah.</div>
+                        @error('avatar')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
                 <div class="form-group"><label class="form-label">No. STR</label><input type="text" name="no_str" value="{{ old('no_str', $user->dokter->no_str) }}" class="form-input"></div>
                 <div class="form-group"><label class="form-label">Spesialisasi</label><input type="text" name="spesialisasi" value="{{ old('spesialisasi', $user->dokter->spesialisasi) }}" class="form-input"></div>
                 <div class="form-group" x-data="{ 

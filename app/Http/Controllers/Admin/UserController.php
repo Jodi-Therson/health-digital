@@ -40,7 +40,13 @@ class UserController extends Controller
             'password' => ['required', Password::min(8)],
             'role'     => 'required|in:pasien,dokter,perawat,admin',
             'phone'    => 'nullable|string|max:20',
+            'avatar'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
 
         $user = User::create([
             'name'     => $request->name,
@@ -48,6 +54,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'role'     => $request->role,
             'phone'    => $request->phone,
+            'avatar'   => $avatarPath,
         ]);
 
         // Buat profil berdasarkan role
@@ -90,11 +97,19 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role'  => 'required|in:pasien,dokter,perawat,admin',
             'phone' => 'nullable|string|max:20',
+            'avatar'=> 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $data = $request->only('name', 'email', 'phone');
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
         $user->update($data);

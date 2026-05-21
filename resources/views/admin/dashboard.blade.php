@@ -71,17 +71,21 @@
             <span style="font-weight:700;">Antrian 7 Hari Terakhir</span>
             <span class="badge badge-primary">Harian</span>
         </div>
-        <div class="card-body" style="padding-top:0.5rem;">
-            <canvas id="chartAntrian" height="220"></canvas>
+        <div class="card-body" style="padding: 1.25rem;">
+            <div style="height: 300px; position: relative;">
+                <canvas id="chartAntrian"></canvas>
+            </div>
         </div>
     </div>
 
     {{-- Chart: Status Distribution Donut --}}
     <div class="card">
         <div class="card-header"><span style="font-weight:700;">Status Antrian Bulan Ini</span></div>
-        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;padding-top:0.5rem;">
-            <canvas id="chartStatus" height="220" style="max-width:220px;"></canvas>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:1rem;width:100%;font-size:0.8125rem;">
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;padding:1.25rem;">
+            <div style="height: 300px; width: 100%; position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
+                <canvas id="chartStatus" style="max-width:260px;"></canvas>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;width:100%;font-size:0.8125rem;">
                 @php
                     $statusColors = ['menunggu'=>'#f59e0b','dipanggil'=>'#2563eb','selesai'=>'#10b981','batal'=>'#ef4444'];
                     $statusLabels = ['menunggu'=>'Menunggu','dipanggil'=>'Dipanggil','selesai'=>'Selesai','batal'=>'Batal'];
@@ -103,8 +107,10 @@
     {{-- Chart: Pendapatan Harian --}}
     <div class="card">
         <div class="card-header"><span style="font-weight:700;">Pendapatan 7 Hari Terakhir</span></div>
-        <div class="card-body" style="padding-top:0.5rem;">
-            <canvas id="chartPendapatan" height="200"></canvas>
+        <div class="card-body" style="padding: 1.25rem;">
+            <div style="height: 300px; position: relative;">
+                <canvas id="chartPendapatan"></canvas>
+            </div>
         </div>
     </div>
 
@@ -160,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} antrian` } } },
             scales: {
                 y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
@@ -185,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             cutout: '70%',
             plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}` } } }
         }
@@ -212,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
                 tooltip: {

@@ -11,7 +11,7 @@ class PembayaranController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pembayaran::with(['pasien.user', 'antrian.dokter.user', 'antrian.layanan']);
+        $query = Pembayaran::with(['pasien.user', 'antrian.dokter.user', 'antrian.layanan', 'konsultasi']);
 
         if ($request->status)  $query->where('status', $request->status);
 

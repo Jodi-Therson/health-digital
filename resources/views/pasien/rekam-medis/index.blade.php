@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{ $rm->tanggal_periksa->format('d M Y') }}</td>
                     <td>{{ $rm->dokter->user->name }}</td>
-                    <td>{{ optional($rm->antrian->layanan)->nama }}</td>
+                    <td>{{ $rm->antrian?->layanan?->nama ?? '—' }}</td>
                     <td>{{ Str::limit($rm->diagnosa, 50) }}</td>
                     <td><a href="{{ route('pasien.rekam-medis.show', $rm->id) }}" class="btn btn-secondary btn-sm">Detail</a></td>
                 </tr>

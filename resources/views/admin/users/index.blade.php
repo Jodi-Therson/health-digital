@@ -7,25 +7,45 @@
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary">+ Tambah Pengguna</a>
 </div>
 
-<div class="card" style="margin-bottom:1rem;"><div class="card-body" style="padding:1rem;">
-    <form method="GET" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
-        <div>
-            <label class="form-label" style="margin-bottom:0.25rem;">Cari</label>
-            <input type="text" name="search" value="{{ request('search') }}" class="form-input" placeholder="Nama / Email..." style="width:250px;">
-        </div>
-        <div>
-            <label class="form-label" style="margin-bottom:0.25rem;">Role</label>
-            <select name="role" class="form-input" style="width:150px;">
-                <option value="">Semua Role</option>
-                <option value="pasien" {{ request('role')=='pasien'?'selected':'' }}>Pasien</option>
-                <option value="dokter" {{ request('role')=='dokter'?'selected':'' }}>Dokter</option>
-                <option value="perawat" {{ request('role')=='perawat'?'selected':'' }}>Perawat</option>
-                <option value="admin" {{ request('role')=='admin'?'selected':'' }}>Admin</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
-    </form>
-</div></div>
+<div class="card" style="margin-bottom: 1.5rem; background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0;">
+    <div class="card-body" style="padding: 1.25rem;">
+        <form method="GET" action="{{ route('admin.users.index') }}" class="filter-grid">
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label class="form-label" style="font-size: 0.875rem; font-weight: 600; color: #475569;">Cari</label>
+                <input type="text" name="search" value="{{ request('search') }}" class="form-input" placeholder="Nama / Email..." style="height: 40px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; background: white; box-sizing: border-box; width: 100%;">
+            </div>
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label class="form-label" style="font-size: 0.875rem; font-weight: 600; color: #475569;">Role</label>
+                <select name="role" class="form-input" style="height: 40px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; background: white; box-sizing: border-box; width: 100%;">
+                    <option value="">Semua Role</option>
+                    <option value="pasien" {{ request('role')=='pasien'?'selected':'' }}>Pasien</option>
+                    <option value="dokter" {{ request('role')=='dokter'?'selected':'' }}>Dokter</option>
+                    <option value="perawat" {{ request('role')=='perawat'?'selected':'' }}>Perawat</option>
+                    <option value="admin" {{ request('role')=='admin'?'selected':'' }}>Admin</option>
+                </select>
+            </div>
+            
+            {{-- Tombol Tampilkan & Reset --}}
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                {{-- Label transparan agar tombol sejajar dengan input di sebelahnya --}}
+                <label class="form-label" style="font-size: 0.875rem; visibility: hidden;">Action</label>
+                <div style="display: flex; gap: 0.5rem; width: 100%;">
+                    {{-- Tombol Tampilkan (Lebih lebar) --}}
+                    <button type="submit" class="btn btn-primary" style="height: 40px; flex: 2; display: flex; justify-content: center; align-items: center; border-radius: 0.375rem; background-color: #2563eb; color: white; border: none; font-weight: 600; cursor: pointer; transition: background-color 0.2s; box-sizing: border-box;">
+                        Tampilkan
+                    </button>
+                    {{-- Tombol Reset --}}
+                    <a href="{{ route('admin.users.index') }}" style="height: 40px; flex: 1; display: flex; justify-content: center; align-items: center; border-radius: 0.375rem; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color 0.2s; box-sizing: border-box;" title="Reset Filter">
+                        Reset
+                    </a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
 
 <div class="card">
     @if($users->isEmpty())
@@ -103,4 +123,23 @@
     <div style="padding:1rem 1.5rem;">{{ $users->links() }}</div>
     @endif
 </div>
+<style>
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    @media(max-width: 768px) {
+        .filter-grid { 
+            grid-template-columns: 1fr 1fr; 
+        }
+    }
+    
+    @media(max-width: 640px) {
+        .filter-grid { 
+            grid-template-columns: 1fr; 
+        }
+    }
+</style>
 @endsection

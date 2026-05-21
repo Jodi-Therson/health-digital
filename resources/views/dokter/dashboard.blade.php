@@ -42,17 +42,21 @@
             <span style="font-weight:700;">Antrian 7 Hari Terakhir</span>
             <span class="badge badge-primary">Mingguan</span>
         </div>
-        <div class="card-body" style="padding-top:0.5rem;">
-            <canvas id="chartAntrianDokter" height="200"></canvas>
+        <div class="card-body" style="padding: 1.25rem;">
+            <div style="height: 300px; position: relative;">
+                <canvas id="chartAntrianDokter"></canvas>
+            </div>
         </div>
     </div>
 
     {{-- Donut Chart: Status distribusi --}}
     <div class="card">
         <div class="card-header"><span style="font-weight:700;">Status Antrian</span><span style="font-size:0.75rem;color:#94a3b8;">Bulan ini</span></div>
-        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;padding-top:0.5rem;">
-            <canvas id="chartStatusDokter" height="200" style="max-width:200px;"></canvas>
-            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;width:100%;font-size:0.8125rem;">
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;padding:1.25rem;">
+            <div style="height: 300px; width: 100%; position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
+                <canvas id="chartStatusDokter" style="max-width:260px;"></canvas>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;width:100%;font-size:0.8125rem;">
                 @php
                     $dColors = ['Menunggu'=>'#fbbf24','Selesai'=>'#10b981','Batal'=>'#ef4444'];
                 @endphp
@@ -201,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
                 tooltip: { callbacks: { label: ctx => ` ${ctx.raw} pasien` } }
@@ -228,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             cutout: '68%',
             plugins: {
                 legend: { display: false },

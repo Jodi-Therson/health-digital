@@ -129,7 +129,7 @@
                 <div style="display:flex;justify-content:flex-end;">
                     <button type="submit" class="btn btn-primary" :disabled="loading">
                         <span x-show="!loading">Kirim Balasan</span>
-                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Mengirim...</span>
+                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Mengirim...</span>
                     </button>
                 </div>
             </form>

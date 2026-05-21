@@ -69,7 +69,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" :disabled="loading">
                         <span x-show="!loading">Kirim Pesan</span>
-                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner"></div>Mengirim...</span>
+                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner"></span>Mengirim...</span>
                     </button>
                 </form>
             </div>

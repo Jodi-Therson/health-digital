@@ -150,7 +150,7 @@
     <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" :disabled="loading">
         <span x-show="!loading">Buat Akun</span>
         <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;">
-            <div class="spinner"></div>Memproses...
+            <span class="spinner"></span>Memproses...
         </span>
     </button>
 </form>

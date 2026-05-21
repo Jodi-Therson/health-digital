@@ -52,7 +52,7 @@
         <a href="{{ route('dokter.rekam-medis.show', $rm->id) }}" class="btn btn-secondary">Batal</a>
         <button type="submit" class="btn btn-primary" :disabled="loading">
             <span x-show="!loading">Perbarui</span>
-            <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Menyimpan...</span>
+            <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>
         </button>
     </div>
 </form>

@@ -412,6 +412,9 @@ table.data-table tbody tr:hover {
 
 /* Loading spinner */
 .spinner {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
   width: 1.25rem;
   height: 1.25rem;
   border: 2px solid var(--color-neutral-200);

@@ -162,7 +162,7 @@
                 <button type="button" class="btn btn-secondary" @click="showModal = false" :disabled="loading">Cek Kembali</button>
                 <button type="button" class="btn btn-primary" :disabled="loading" @click="loading = true; document.getElementById('antrianForm').submit()">
                     <span x-show="!loading">Ya, Daftar Sekarang</span>
-                    <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div>Memproses...</span>
+                    <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Memproses...</span>
                 </button>
             </div>
         </div>

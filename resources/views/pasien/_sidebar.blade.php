@@ -28,12 +28,12 @@
 </a>
 @endforeach
 <div style="border-top:1px solid #f1f5f9; margin:0.75rem 0.5rem 0; padding-top:0.75rem;">
-    <a href="{{ route('pasien.bantuan') }}" class="sidebar-link {{ request()->routeIs('pasien.bantuan') ? 'active' : '' }}">
+    <a href="{{ route('pasien.bantuan') }}" class="sidebar-link {{ request()->routeIs('pasien.bantuan') ? 'active' : '' }}" style="margin-left: 0; margin-right: 0;">
         <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         Bantuan & Panduan
     </a>
 
-    <button type="button" @click="showLogoutModal = true" class="sidebar-link" style="width:100%; color:#ef4444; background:none; border:none; cursor:pointer; text-align:left;">
+    <button type="button" @click="showLogoutModal = true" class="sidebar-link" style="width:100%; color:#ef4444; background:none; border:none; cursor:pointer; text-align:left; margin-left: 0; margin-right: 0;">
         <svg style="width:1.125rem;height:1.125rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         Keluar
     </button>

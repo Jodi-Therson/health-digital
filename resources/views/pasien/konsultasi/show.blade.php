@@ -18,6 +18,34 @@
 
 <div style="max-width:740px;">
 
+    {{-- ── PAYMENT GATE BANNER ── --}}
+    @if(isset($pembayaranKonsultasi) && $pembayaranKonsultasi && $pembayaranKonsultasi->status === 'menunggu')
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:2px solid #f59e0b;border-radius:1rem;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;">
+        <div style="background:#fbbf24;width:2.75rem;height:2.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg style="width:1.375rem;height:1.375rem;color:white;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <div style="flex:1;">
+            <div style="font-weight:700;color:#92400e;font-size:0.9375rem;margin-bottom:0.375rem;">
+                💳 Selesaikan Pembayaran untuk Mulai Berkonsultasi
+            </div>
+            <div style="font-size:0.8125rem;color:#b45309;line-height:1.6;margin-bottom:0.875rem;">
+                Konsultasi Anda berhasil dibuat. Harap selesaikan pembayaran QRIS sebesar
+                <strong>{{ $pembayaranKonsultasi->jumlah_format }}</strong> agar dokter dapat melihat dan membalas pertanyaan Anda.
+            </div>
+            <a href="{{ route('pasien.pembayaran.show', $pembayaranKonsultasi->id) }}"
+               class="btn btn-primary" style="background:#d97706;border-color:#d97706;font-size:0.875rem;padding:0.5rem 1.25rem;">
+                <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16.01 20H18a2 2 0 002-2v-6a2 2 0 00-2-2h-2M12 12V6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2h2"/></svg>
+                Bayar via QRIS Sekarang
+            </a>
+        </div>
+    </div>
+    @elseif(isset($pembayaranKonsultasi) && $pembayaranKonsultasi && $pembayaranKonsultasi->status === 'dibayar')
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.75rem;padding:0.875rem 1.25rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+        <svg style="width:1.25rem;height:1.25rem;color:#10b981;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span style="font-size:0.875rem;color:#065f46;font-weight:500;">✅ Pembayaran lunas — Anda dapat berkonsultasi dengan dokter.</span>
+    </div>
+    @endif
+
     {{-- Banner ditutup --}}
     @if($konsultasi->status === 'ditutup')
     <div style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:0.75rem;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">

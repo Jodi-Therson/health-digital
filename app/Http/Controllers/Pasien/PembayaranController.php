@@ -12,7 +12,7 @@ class PembayaranController extends Controller
     {
         $pasien = auth()->user()->pasien;
         $pembayarans = $pasien->pembayarans()
-            ->with('antrian.dokter.user')
+            ->with(['antrian.dokter.user', 'antrian.layanan', 'konsultasi.dokter.user'])
             ->latest()
             ->paginate(10);
         return view('pasien.pembayaran.index', compact('pembayarans'));
@@ -22,9 +22,14 @@ class PembayaranController extends Controller
     {
         $pasien = auth()->user()->pasien;
         $pembayaran = Pembayaran::where('pasien_id', $pasien->id)
-            ->with(['antrian.dokter.user', 'antrian.layanan', 'antrian.rekamMedis'])
+            ->with([
+                'antrian.dokter.user',
+                'antrian.layanan',
+                'antrian.rekamMedis',
+                'konsultasi.dokter.user',
+            ])
             ->findOrFail($id);
-            
+
         if ($request->ajax()) {
             return response()->json(['status' => $pembayaran->status]);
         }

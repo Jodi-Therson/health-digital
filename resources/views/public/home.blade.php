@@ -31,34 +31,41 @@
                     </a>
                 </div>
 
-                <!-- Quick Stats -->
-                <div style="display:flex; gap:2rem; margin-top:2.5rem;">
+                <!-- Quick Stats — dynamic from DB -->
+                <div style="display:flex; gap:2rem; margin-top:2.5rem; flex-wrap:wrap;">
                     <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">500+</div>
+                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalPasien > 0 ? $totalPasien.'+' : '—' }}</div>
                         <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Pasien Terdaftar</div>
                     </div>
                     <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">20+</div>
+                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalDokter > 0 ? $totalDokter.'+' : '—' }}</div>
                         <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Dokter Spesialis</div>
                     </div>
                     <div>
-                        <div style="font-size:1.5rem; font-weight:800; color:white;">6</div>
+                        <div style="font-size:1.5rem; font-weight:800; color:white;">{{ $totalLayanan }}</div>
                         <div style="font-size:0.8125rem; color:rgba(255,255,255,0.7);">Layanan Medis</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Hero image/illustration -->
-            <div style="display:flex; justify-content:center;">
-                <div style="background:rgba(255,255,255,0.12); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.2); border-radius:1.5rem; padding:2rem; max-width:380px; width:100%;">
-                    <!-- Antrian Card Preview -->
-                    <div style="background:white; border-radius:1rem; padding:1.25rem; margin-bottom:1rem; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+            <!-- Hero image (ganti file public/images/hero.jpg sesuai kebutuhan) -->
+            <div style="display:flex; justify-content:center; align-items:center;">
+                <img
+                    id="hero-img"
+                    src="{{ asset('images/hero.png') }}"
+                    alt="Layanan Kesehatan Digital HealthDigital"
+                    style="width:100%; max-width:480px; border-radius:1.5rem; box-shadow:0 20px 60px rgba(0,0,0,0.25); object-fit:cover; aspect-ratio:4/3;"
+                    onerror="this.style.display='none'; document.getElementById('hero-fallback').style.display='flex';"
+                >
+                {{-- Fallback jika hero.jpg belum ada --}}
+                <div id="hero-fallback" style="display:none; background:rgba(255,255,255,0.12); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.2); border-radius:1.5rem; padding:2rem; max-width:380px; width:100%; flex-direction:column; gap:1rem;">
+                    <div style="background:white; border-radius:1rem; padding:1.25rem; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
                             <span style="font-size:0.75rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Nomor Antrian</span>
                             <span class="badge badge-info" style="animation:blink 1.5s ease-in-out infinite;">● Dipanggil</span>
                         </div>
                         <div style="font-size:2.5rem; font-weight:800; color:#2563eb; font-family:monospace; text-align:center; letter-spacing:0.1em;">UMU-001</div>
-                        <div style="text-align:center; font-size:0.8125rem; color:#64748b; margin-top:0.5rem;">Dr. Budi Santoso — Poli Umum</div>
+                        <div style="text-align:center; font-size:0.8125rem; color:#64748b; margin-top:0.5rem;">Antrian Online — HealthDigital</div>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
                         <div style="background:rgba(255,255,255,0.8); border-radius:0.75rem; padding:0.875rem; text-align:center;">
@@ -111,17 +118,29 @@
             <p style="color:#64748b; max-width:480px; margin:0 auto; font-size:0.9375rem;">Tersedia berbagai layanan spesialisasi medis yang ditangani oleh tenaga kesehatan profesional.</p>
         </div>
 
+        @if($layanans->isEmpty())
+        <div style="text-align:center; padding:3rem; color:#94a3b8;">
+            <svg style="width:3rem;height:3rem;margin:0 auto 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <p>Belum ada layanan yang tersedia saat ini.</p>
+        </div>
+        @else
         <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.25rem;">
-            @php $iconMap = ['stethoscope'=>'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z','tooth'=>'M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18','baby'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z','pregnant'=>'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z','surgery'=>'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z','lab'=>'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z']; @endphp
-
             @foreach($layanans as $layanan)
             <div class="card" style="transition:all 0.2s; cursor:pointer; border-left:3px solid #2563eb;" onmouseover="this.style.boxShadow='0 8px 24px rgba(37,99,235,0.12)';this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
                 <div class="card-body">
+                    <!-- Gambar layanan (image upload) atau placeholder -->
+                    @if($layanan->gambar_url)
+                    <div style="margin-bottom:0.875rem; border-radius:0.75rem; overflow:hidden; height:120px;">
+                        <img src="{{ $layanan->gambar_url }}" alt="{{ $layanan->nama }}"
+                             style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    @else
                     <div style="background:#dbeafe; width:2.75rem; height:2.75rem; border-radius:0.75rem; display:flex; align-items:center; justify-content:center; margin-bottom:0.875rem;">
                         <svg style="width:1.375rem;height:1.375rem;color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $iconMap[$layanan->ikon] ?? 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' }}"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                         </svg>
                     </div>
+                    @endif
                     <h3 style="font-size:1rem; font-weight:700; color:#1e293b; margin-bottom:0.5rem;">Poli {{ $layanan->nama }}</h3>
                     <p style="font-size:0.875rem; color:#64748b; line-height:1.6;">{{ $layanan->deskripsi }}</p>
                     @auth
@@ -133,6 +152,7 @@
             </div>
             @endforeach
         </div>
+        @endif
 
         <div style="text-align:center; margin-top:2rem;">
             <a href="{{ route('layanan') }}" class="btn btn-secondary">Lihat Semua Layanan →</a>
@@ -192,6 +212,7 @@
 <style>
 @media (max-width: 768px) {
     .hero-grid { grid-template-columns: 1fr !important; }
+    #hero-img { max-width: 100% !important; }
 }
 </style>
 

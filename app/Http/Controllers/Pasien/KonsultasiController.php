@@ -70,6 +70,8 @@ class KonsultasiController extends Controller
                 ->withInput();
         }
 
+        $dokter = Dokter::find($request->dokter_id);
+
         $konsultasi = Konsultasi::create([
             'pasien_id' => $pasien->id,
             'dokter_id' => $request->dokter_id,
@@ -83,9 +85,23 @@ class KonsultasiController extends Controller
             'pesan'    => $request->pesan,
         ]);
 
+        // ── PAYMENT GATE: buat pembayaran QRIS untuk konsultasi ini ──
+        $noInvoice = 'KONSUL-' . date('Ymd') . '-' . str_pad($konsultasi->id, 6, '0', STR_PAD_LEFT);
+        $tarif     = $dokter ? (float) $dokter->tarif_konsultasi : 0;
+
+        $pembayaran = \App\Models\Pembayaran::create([
+            'konsultasi_id' => $konsultasi->id,
+            'antrian_id'    => null,
+            'pasien_id'     => $pasien->id,
+            'kode_invoice'  => $noInvoice,
+            'jumlah'        => $tarif > 0 ? $tarif : 50000, // tarif default jika 0
+            'metode'        => 'qris',
+            'status'        => 'menunggu',
+        ]);
+
         return redirect()
-            ->route('pasien.konsultasi.show', $konsultasi->id)
-            ->with('success', 'Pertanyaan berhasil dikirim! Dokter akan membalas dalam 1×24 jam.');
+            ->route('pasien.pembayaran.show', $pembayaran->id)
+            ->with('info', '✅ Konsultasi berhasil dibuat! Selesaikan pembayaran QRIS untuk mulai berkonsultasi dengan dokter.');
     }
 
     public function show($id)
@@ -100,7 +116,12 @@ class KonsultasiController extends Controller
             $konsultasi->update(['dibaca_pasien' => true]);
         }
 
-        return view('pasien.konsultasi.show', compact('konsultasi'));
+        // Ambil pembayaran konsultasi ini (jika ada)
+        $pembayaranKonsultasi = \App\Models\Pembayaran::where('konsultasi_id', $konsultasi->id)
+            ->latest()
+            ->first();
+
+        return view('pasien.konsultasi.show', compact('konsultasi', 'pembayaranKonsultasi'));
     }
 
     public function update(Request $request, $id)

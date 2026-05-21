@@ -26,7 +26,7 @@
         <!-- Info kunjungan -->
         <div class="card">
             <div class="card-header">Informasi Kunjungan</div>
-            <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div class="card-body" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:0.75rem;">
                 <div>
                     <div style="font-size:0.75rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Tanggal Periksa</div>
                     <div style="font-weight:600;color:#1e293b;margin-top:0.25rem;">{{ $rm->tanggal_periksa->format('d F Y') }}</div>

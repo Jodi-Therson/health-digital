@@ -39,7 +39,7 @@
 
     @if($antrian)
     <div class="card" style="background:#f0fdf4;border:1px solid #bbf7d0;margin-bottom:1.5rem;">
-        <div class="card-body" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
+        <div class="card-body" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:1rem;">
             <div><div style="font-size:0.75rem;color:#64748b;font-weight:600;">Pasien</div><div style="font-weight:700;color:#1e293b;">{{ $antrian->pasien->user->name }}</div></div>
             <div><div style="font-size:0.75rem;color:#64748b;font-weight:600;">No. Antrian</div><div style="font-weight:700;color:#2563eb;font-family:monospace;">{{ $antrian->no_antrian }}</div></div>
             <div><div style="font-size:0.75rem;color:#64748b;font-weight:600;">Layanan</div><div style="font-weight:700;">{{ $antrian->layanan->nama }}</div></div>
@@ -56,7 +56,7 @@
                     <label class="form-label">Tanggal Periksa</label>
                     <input type="date" name="tanggal_periksa" value="{{ old('tanggal_periksa', date('Y-m-d')) }}" class="form-input" required>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:0.75rem;">
                     <div class="form-group">
                         <label class="form-label">Tekanan Darah</label>
                         <input type="text" name="tekanan_darah" value="{{ old('tekanan_darah', $antrian ? $antrian->tekanan_darah : '') }}" class="form-input" placeholder="120/80">
@@ -104,7 +104,7 @@
         </div>
         <div class="card-body">
             <template x-for="(r, i) in resep" :key="i">
-                <div style="display:grid;grid-template-columns:2fr 1fr 2fr auto;gap:0.75rem;margin-bottom:0.75rem;align-items:end;">
+                <div class="prescription-grid">
                     <div>
                         <label class="form-label" style="font-size:0.75rem;">Nama Obat</label>
                         <input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input" placeholder="Nama obat">

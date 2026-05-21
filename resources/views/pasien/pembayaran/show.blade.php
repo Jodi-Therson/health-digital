@@ -200,7 +200,13 @@ setInterval(() => {
                             <svg style="width: 2rem; height: 2rem; color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                         </div>
                         <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">Pembayaran Berhasil!</h3>
-                        <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Mengalihkan halaman dalam beberapa detik...</p>
+                        <p style="font-size: 0.875rem; color: #64748b; margin: 0;">
+                            @if($pembayaran->konsultasi_id)
+                                Mengalihkan ke halaman konsultasi dalam beberapa detik...
+                            @else
+                                Memperbarui status pembayaran dalam beberapa detik...
+                            @endif
+                        </p>
                     </div>
                     <style>
                         @keyframes scaleIn {
@@ -211,7 +217,11 @@ setInterval(() => {
                 `;
             }
             setTimeout(() => {
-                window.location.reload();
+                @if($pembayaran->konsultasi_id)
+                    window.location.href = "{{ route('pasien.konsultasi.show', $pembayaran->konsultasi_id) }}";
+                @else
+                    window.location.reload();
+                @endif
             }, 2500);
         }
     })

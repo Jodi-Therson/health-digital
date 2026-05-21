@@ -141,7 +141,7 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-1 overflow-hidden" style="padding:1.5rem;">
+    <main class="flex-1 overflow-hidden p-4 lg:p-6">
         <!-- Breadcrumb -->
         @hasSection('breadcrumb')
         <nav class="breadcrumb">

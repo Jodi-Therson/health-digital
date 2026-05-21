@@ -21,7 +21,7 @@
                 </select>
                 @error('pasien_id')<div class="form-error">{{ $message }}</div>@enderror
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" x-data="{
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:1rem;" x-data="{
                 selectedLayanan: '{{ old('layanan_id') }}',
                 selectedDokter: '{{ old('dokter_id') }}',
                 dokters: {{ json_encode($dokters->map(fn($d) => ['id' => $d->id, 'name' => $d->user->name, 'spesialisasi' => $d->spesialisasi, 'avatar' => $d->user->avatar_url, 'tarif' => (float)$d->tarif_konsultasi])) }},

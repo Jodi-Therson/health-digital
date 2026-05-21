@@ -78,7 +78,7 @@
                 <label class="form-label">NIK (Nomor Induk Kependudukan)</label>
                 <div class="form-input" style="background: #f8fafc; color: #475569; border-color: #e2e8f0; cursor: not-allowed;">{{ $user->pasien->nik }}</div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                 <div class="form-group">
                     <label class="form-label">Tanggal Lahir</label>
                     <div class="form-input" style="background: #f8fafc; color: #475569; border-color: #e2e8f0; cursor: not-allowed;">{{ \Carbon\Carbon::parse($user->pasien->tanggal_lahir)->format('d M Y') }}</div>

@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-header">Vital Signs</div>
             <div class="card-body">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:0.75rem;">
                     <div class="form-group"><label class="form-label">Tekanan Darah</label><input type="text" name="tekanan_darah" value="{{ old('tekanan_darah', $rm->tekanan_darah) }}" class="form-input" placeholder="120/80"></div>
                     <div class="form-group"><label class="form-label">Suhu (°C)</label><input type="number" name="suhu_tubuh" value="{{ old('suhu_tubuh', $rm->suhu_tubuh) }}" class="form-input" step="0.1"></div>
                     <div class="form-group"><label class="form-label">Berat (kg)</label><input type="number" name="berat_badan" value="{{ old('berat_badan', $rm->berat_badan) }}" class="form-input" step="0.1"></div>
@@ -36,7 +36,7 @@
         </div>
         <div class="card-body">
             <template x-for="(r,i) in resep" :key="i">
-                <div style="display:grid;grid-template-columns:2fr 1fr 2fr auto;gap:0.75rem;margin-bottom:0.75rem;align-items:end;">
+                <div class="prescription-grid">
                     <div><label class="form-label" style="font-size:0.75rem;">Obat</label><input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input"></div>
                     <div><label class="form-label" style="font-size:0.75rem;">Dosis</label><input type="text" :name="'resep_dosis['+i+']'" x-model="r.dosis" class="form-input"></div>
                     <div><label class="form-label" style="font-size:0.75rem;">Aturan</label><input type="text" :name="'resep_aturan['+i+']'" x-model="r.aturan" class="form-input"></div>

@@ -57,7 +57,7 @@
             @else
             <form method="POST" action="{{ route('perawat.antrian.vital-signs', $antrian->id) }}" x-data="{loading:false}" @submit="loading=true">
                 @csrf @method('PATCH')
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:1rem;margin-bottom:1rem;">
                     <div class="form-group" style="margin-bottom:0;">
                         <label class="form-label">Tekanan Darah (mmHg)</label>
                         <input type="text" name="tekanan_darah" class="form-input" value="{{ old('tekanan_darah', $antrian->tekanan_darah) }}" placeholder="120/80">

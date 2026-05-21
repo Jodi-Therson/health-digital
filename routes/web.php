@@ -14,6 +14,9 @@ Route::get('/layanan', [PublicController::class, 'layanan'])->name('layanan');
 Route::get('/fasilitas', [PublicController::class, 'fasilitas'])->name('fasilitas');
 Route::get('/kontak', [PublicController::class, 'kontak'])->name('kontak');
 
+// QRIS Simulation Endpoint (Public so mobile phones can scan without login)
+Route::get('/qris/scan/{reference}', [App\Http\Controllers\Pasien\PembayaranController::class, 'qrisScan'])->name('qris.scan');
+
 // ── AUTH ROUTES ────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,13 +36,10 @@ Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->name('pasien.')->g
     Route::get('/dashboard', [Pasien\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bantuan', [Pasien\DashboardController::class, 'bantuan'])->name('bantuan');
     Route::resource('antrian', Pasien\AntrianController::class)->only(['index', 'create', 'store', 'show', 'update']);
-    Route::get('rekam-medis', [Pasien\RekamMedisController::class, 'index'])->name('rekam-medis.index');
-    Route::get('rekam-medis/{id}', [Pasien\RekamMedisController::class, 'show'])->name('rekam-medis.show');
-    Route::get('rekam-medis/{id}/pdf', [Pasien\RekamMedisController::class, 'downloadPdf'])->name('rekam-medis.pdf');
     Route::resource('konsultasi', Pasien\KonsultasiController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::get('konsultasi/cek-duplikat', [Pasien\KonsultasiController::class, 'cekDuplikat'])->name('konsultasi.cek-duplikat');
     Route::resource('pembayaran', Pasien\PembayaranController::class)->only(['index', 'show', 'update']);
-    Route::post('pembayaran/{id}/upload', [Pasien\PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+    Route::post('pembayaran/{id}/bayar', [Pasien\PembayaranController::class, 'bayar'])->name('pembayaran.bayar');
 });
 
 // ── DOKTER ROUTES ──────────────────────────────────────────
@@ -70,7 +70,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('layanan', Admin\LayananController::class);
     Route::resource('fasilitas', Admin\FasilitasController::class)->parameters(['fasilitas' => 'fasilitas']);
     Route::get('pembayaran', [Admin\PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::patch('pembayaran/{id}/verifikasi', [Admin\PembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
     Route::get('laporan', [Admin\LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export', [Admin\LaporanController::class, 'export'])->name('laporan.export');
 });

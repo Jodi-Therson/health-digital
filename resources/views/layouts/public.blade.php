@@ -41,7 +41,7 @@
             @endauth
 
             <!-- Hamburger Button (Mobile only) -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-1.5 rounded-lg hover:bg-neutral-100 transition-colors" aria-label="Toggle Menu" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="flex md:hidden p-1.5 rounded-lg hover:bg-neutral-100 transition-colors" aria-label="Toggle Menu" style="border:none; background:none; cursor:pointer; align-items:center; justify-content:center;">
                 <svg class="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="!mobileMenuOpen" style="width:1.5rem; height:1.5rem;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
@@ -51,26 +51,25 @@
             </button>
         </div>
     </div>
-</nav>
-
-<!-- Mobile Nav Menu -->
-<div x-show="mobileMenuOpen" 
-     x-transition:enter="transition ease-out duration-200"
-     x-transition:enter-start="opacity-0 -translate-y-4"
-     x-transition:enter-end="opacity-100 translate-y-0"
-     x-transition:leave="transition ease-in duration-150"
-     x-transition:leave-start="opacity-100 translate-y-0"
-     x-transition:leave-end="opacity-0 -translate-y-4"
-     class="md:hidden"
-     style="display:none;"
-     x-cloak>
-    <div style="padding:1rem; display:flex; flex-direction:column; gap:0.5rem; background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <a href="{{ route('home') }}" class="public-nav-link {{ request()->routeIs('home') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Beranda</a>
-        <a href="{{ route('layanan') }}" class="public-nav-link {{ request()->routeIs('layanan') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Layanan</a>
-        <a href="{{ route('fasilitas') }}" class="public-nav-link {{ request()->routeIs('fasilitas') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Fasilitas</a>
-        <a href="{{ route('kontak') }}" class="public-nav-link {{ request()->routeIs('kontak') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Kontak</a>
+    <!-- Mobile Nav Menu -->
+    <div x-show="mobileMenuOpen" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-4"
+         class="md:hidden"
+         style="display:none;"
+         x-cloak>
+        <div style="padding:1rem; display:flex; flex-direction:column; gap:0.5rem; background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <a href="{{ route('home') }}" class="public-nav-link {{ request()->routeIs('home') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Beranda</a>
+            <a href="{{ route('layanan') }}" class="public-nav-link {{ request()->routeIs('layanan') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Layanan</a>
+            <a href="{{ route('fasilitas') }}" class="public-nav-link {{ request()->routeIs('fasilitas') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Fasilitas</a>
+            <a href="{{ route('kontak') }}" class="public-nav-link {{ request()->routeIs('kontak') ? 'text-blue-600 bg-blue-50' : '' }}" @click="mobileMenuOpen = false" style="display:block; padding: 0.5rem 1rem;">Kontak</a>
+        </div>
     </div>
-</div>
+</nav>
 
 <!-- CONTENT -->
 @yield('content')

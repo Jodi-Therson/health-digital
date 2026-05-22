@@ -16,7 +16,7 @@
         <div style="text-align:center; margin-bottom:2rem;">
             <a href="{{ route('home') }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.75rem; text-decoration:none;">
                 <div style="background:linear-gradient(135deg,#2563eb,#0891b2); width:3rem; height:3rem; border-radius:0.875rem; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(37,99,235,0.3);">
-                    <svg style="width:1.5rem;height:1.5rem;color:white;" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                    <img src="{{ asset('images/image.png') }}" alt="" style="width:1.75rem; height:1.75rem; object-fit:contain;">
                 </div>
                 <div style="text-align:left;">
                     <div style="font-weight:800;font-size:1.5rem;color:#1e3a8a;letter-spacing:-0.025em;line-height:1;">Health<span style="color:#2563eb;">Digital</span></div>

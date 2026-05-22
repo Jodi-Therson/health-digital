@@ -16,7 +16,7 @@
         <!-- Logo -->
         <a href="{{ route('home') }}" style="display:flex; align-items:center; gap:0.625rem; text-decoration:none;">
             <div style="background:linear-gradient(135deg,#2563eb,#0891b2); width:2.25rem; height:2.25rem; border-radius:0.625rem; display:flex; align-items:center; justify-content:center;">
-                <svg style="width:1.25rem;height:1.25rem;color:white;" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                <img src="{{ asset('images/image.png') }}" alt="">
             </div>
             <span style="font-weight:800; font-size:1.125rem; color:#1e3a8a; letter-spacing:-0.025em;">Health<span style="color:#2563eb;">Digital</span></span>
         </a>
@@ -81,7 +81,7 @@
             <div>
                 <div style="display:flex; align-items:center; gap:0.625rem; margin-bottom:1rem;">
                     <div style="background:linear-gradient(135deg,#2563eb,#0891b2); width:2rem; height:2rem; border-radius:0.5rem; display:flex; align-items:center; justify-content:center;">
-                        <svg style="width:1rem;height:1rem;color:white;" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                        <img src="{{ asset('images/image.png') }}" alt="">
                     </div>
                     <span style="font-weight:800;font-size:1.125rem;color:white;">Health<span style="color:#60a5fa;">Digital</span></span>
                 </div>

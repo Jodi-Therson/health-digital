@@ -10,6 +10,7 @@
     <div class="card-body">
         <form method="POST" action="{{ route('admin.layanan.store') }}" enctype="multipart/form-data"
               x-data="{
+                loading: false,
                 previewUrl: null,
                 handleFile(e) {
                     const file = e.target.files[0];
@@ -18,7 +19,8 @@
                     reader.onload = (ev) => { this.previewUrl = ev.target.result; };
                     reader.readAsDataURL(file);
                 }
-              }">
+              }"
+              @submit="loading = true">
             @csrf
 
             <div class="form-group">
@@ -81,8 +83,10 @@
             </div>
 
             <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:2rem;">
-                <a href="{{ route('admin.layanan.index') }}" class="btn btn-secondary">Batal</a>
-                <button type="submit" class="btn btn-primary" style="padding:0.75rem 2rem;">Simpan Layanan</button>
+                <button type="submit" class="btn btn-primary" style="padding:0.75rem 2rem;" :disabled="loading">
+                    <span x-show="!loading">Simpan Layanan</span>
+                    <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>
+                </button>
             </div>
         </form>
     </div>

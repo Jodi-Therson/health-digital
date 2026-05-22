@@ -96,7 +96,7 @@
         @endif
     </div>
     
-    <div style="margin-top: 1.5rem; display:flex; justify-content:flex-end;">
+    <div style="margin-top: 1.5rem; display:flex; justify-content:flex-end; gap:0.75rem;">
         <button type="button" 
             @click="triggerConfirm(
                 'Simpan Perubahan',
@@ -106,7 +106,7 @@
             )"
             class="btn btn-primary" :disabled="loading">
             <span x-show="!loading">Simpan Semua Perubahan</span>
-            <span x-show="loading">Menyimpan...</span>
+            <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>
         </button>
     </div>
 </form>

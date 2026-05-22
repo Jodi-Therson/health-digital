@@ -85,7 +85,7 @@
         @if($antrianHariIni->isEmpty())
         <div class="empty-state" style="padding:2rem;">
             <svg style="width:2.5rem;height:2.5rem;color:#cbd5e1;margin:0 auto 0.75rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            <div style="color:#94a3b8;">Tidak ada antrian hari ini 🎉</div>
+            <div style="color:#94a3b8;">Tidak ada antrian hari ini</div>
         </div>
         @else
         <div style="display:flex;flex-direction:column;gap:0;">
@@ -141,7 +141,7 @@
         </div>
         @if($konsultasiPending->isEmpty())
         <div class="empty-state" style="padding:2rem;">
-            <div style="color:#94a3b8;font-size:0.875rem;">Tidak ada konsultasi pending ✅</div>
+            <div style="color:#94a3b8;font-size:0.875rem;">Tidak ada konsultasi pending</div>
         </div>
         @else
         @foreach($konsultasiPending as $k)
@@ -180,7 +180,6 @@
 }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Chart 1: Antrian per hari — Line Chart

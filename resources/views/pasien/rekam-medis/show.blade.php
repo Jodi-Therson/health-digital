@@ -114,10 +114,10 @@
             <div class="card-header">Vital Signs</div>
             <div class="card-body">
                 @php $vitals = [
-                    ['icon'=>'❤️','label'=>'Tekanan Darah','val'=>$rm->tekanan_darah,'unit'=>'mmHg'],
-                    ['icon'=>'⚖️','label'=>'Berat Badan','val'=>$rm->berat_badan,'unit'=>'kg'],
-                    ['icon'=>'📏','label'=>'Tinggi Badan','val'=>$rm->tinggi_badan,'unit'=>'cm'],
-                    ['icon'=>'🌡️','label'=>'Suhu Tubuh','val'=>$rm->suhu_tubuh,'unit'=>'°C'],
+                    ['icon'=>'','label'=>'Tekanan Darah','val'=>$rm->tekanan_darah,'unit'=>'mmHg'],
+                    ['icon'=>'','label'=>'Berat Badan','val'=>$rm->berat_badan,'unit'=>'kg'],
+                    ['icon'=>'','label'=>'Tinggi Badan','val'=>$rm->tinggi_badan,'unit'=>'cm'],
+                    ['icon'=>'','label'=>'Suhu Tubuh','val'=>$rm->suhu_tubuh,'unit'=>'°C'],
                 ]; @endphp
                 @foreach($vitals as $v)
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid #f1f5f9;">

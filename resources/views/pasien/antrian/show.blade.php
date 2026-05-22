@@ -15,9 +15,16 @@
     <div style="display:flex;gap:0.75rem;">
         <a href="{{ route('pasien.antrian.index') }}" class="btn btn-secondary">← Kembali</a>
         @if($antrian->status === 'menunggu')
-        <form method="POST" action="{{ route('pasien.antrian.update', $antrian->id) }}" onsubmit="return confirm('Anda yakin ingin membatalkan antrian ini?');">
+        <form method="POST" action="{{ route('pasien.antrian.update', $antrian->id) }}" x-ref="batalForm">
             @csrf @method('PUT')
-            <button type="submit" name="action" value="batal" class="btn" style="background:#fee2e2;color:#ef4444;border:1px solid #fca5a5;">Batalkan Antrian</button>
+            <button type="button" name="action" value="batal"
+                @click="triggerConfirm(
+                    'Batalkan Antrian',
+                    'Anda yakin ingin membatalkan antrian {{ $antrian->no_antrian }}? Tindakan ini tidak dapat dibatalkan.',
+                    () => { $refs.batalForm.submit() },
+                    'danger'
+                )"
+                class="btn" style="background:#fee2e2;color:#ef4444;border:1px solid #fca5a5;">Batalkan Antrian</button>
         </form>
         @endif
     </div>
@@ -30,7 +37,6 @@
     <div style="margin-top:0.75rem;">
         <span class="badge" style="background:rgba(255,255,255,0.25); color:white; font-size:0.875rem; padding:0.5rem 1.5rem;">
             {{ $antrian->status_label }}
-            @if($antrian->status === 'dipanggil') 🔔 @endif
         </span>
     </div>
 </div>

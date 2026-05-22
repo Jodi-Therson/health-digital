@@ -49,7 +49,6 @@
         <div class="card-body"><div class="form-group" style="margin:0;"><label class="form-label">Catatan</label><textarea name="catatan" rows="2" class="form-input">{{ old('catatan', $rm->catatan) }}</textarea></div></div>
     </div>
     <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;">
-        <a href="{{ route('dokter.rekam-medis.show', $rm->id) }}" class="btn btn-secondary">Batal</a>
         <button type="submit" class="btn btn-primary" :disabled="loading">
             <span x-show="!loading">Perbarui</span>
             <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>

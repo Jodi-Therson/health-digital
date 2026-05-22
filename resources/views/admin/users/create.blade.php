@@ -98,7 +98,10 @@
         </div>
     </div>
     <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;">
-        <button type="submit" class="btn btn-primary" :disabled="loading">Simpan Pengguna</button>
+        <button type="submit" class="btn btn-primary" :disabled="loading">
+            <span x-show="!loading">Simpan Pengguna</span>
+            <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>
+        </button>
     </div>
 </form>
 <style>@media(max-width:768px){.form-grid{grid-template-columns:1fr !important;}}</style>

@@ -87,7 +87,7 @@
                                 @click="triggerConfirm(
                                     '{{ $u->is_active ? 'Nonaktifkan Akun' : 'Aktifkan Akun' }}',
                                     '{{ $u->is_active ? 'Nonaktifkan akun '.$u->name.'? User ini tidak akan bisa login ke sistem.' : 'Aktifkan kembali akun '.$u->name.'?' }}',
-                                    () => { $refs.toggleForm{{ $l->id ?? $u->id }}.submit() },
+                                    () => { $refs.toggleForm{{ $u->id }}.submit() },
                                     '{{ $u->is_active ? 'danger' : 'primary' }}'
                                 )"
                                 class="badge {{ $u->is_active ? 'badge-success' : 'badge-danger' }}" 

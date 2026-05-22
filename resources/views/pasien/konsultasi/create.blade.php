@@ -155,7 +155,6 @@
             </div>
 
             <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                <a href="{{ route('pasien.konsultasi.index') }}" class="btn btn-secondary">Batal</a>
                 <button type="submit" class="btn btn-primary" :disabled="loading || dupAlert || charCount < 20">
                     <span x-show="!loading" style="display:flex;align-items:center;gap:0.5rem;">
                         <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>

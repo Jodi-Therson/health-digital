@@ -26,7 +26,7 @@
         </div>
         <div style="flex:1;">
             <div style="font-weight:700;color:#92400e;font-size:0.9375rem;margin-bottom:0.375rem;">
-                💳 Selesaikan Pembayaran untuk Mulai Berkonsultasi
+                Selesaikan Pembayaran untuk Mulai Berkonsultasi
             </div>
             <div style="font-size:0.8125rem;color:#b45309;line-height:1.6;margin-bottom:0.875rem;">
                 Konsultasi Anda berhasil dibuat. Harap selesaikan pembayaran QRIS sebesar
@@ -42,7 +42,7 @@
     @elseif(isset($pembayaranKonsultasi) && $pembayaranKonsultasi && $pembayaranKonsultasi->status === 'dibayar')
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.75rem;padding:0.875rem 1.25rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
         <svg style="width:1.25rem;height:1.25rem;color:#10b981;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span style="font-size:0.875rem;color:#065f46;font-weight:500;">✅ Pembayaran lunas — Anda dapat berkonsultasi dengan dokter.</span>
+        <span style="font-size:0.875rem;color:#065f46;font-weight:500;">Pembayaran lunas — Anda dapat berkonsultasi dengan dokter.</span>
     </div>
     @endif
 

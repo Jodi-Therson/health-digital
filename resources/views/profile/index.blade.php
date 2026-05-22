@@ -26,7 +26,7 @@
     <div class="card">
         <div class="card-header">Pengaturan Kontak & Keamanan</div>
         <div class="card-body">
-            <form method="POST" action="{{ route('profile.update') }}">
+            <form method="POST" action="{{ route('profile.update') }}" x-data="{ loading: false }" @submit="loading = true">
                 @csrf
                 @method('PUT')
                 
@@ -58,7 +58,12 @@
                 </div>
 
                 <div style="margin-top: 1.5rem; text-align: right;">
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="submit" class="btn btn-primary" :disabled="loading">
+                        <span x-show="!loading">Simpan Perubahan</span>
+                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;">
+                            <span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...
+                        </span>
+                    </button>
                 </div>
             </form>
         </div>

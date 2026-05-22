@@ -38,10 +38,10 @@
                     <div><div style="font-weight:700;color:#1e293b;">{{ $rm->pasien->user->name }}</div><div style="font-size:0.8125rem;color:#64748b;">NIK: {{ $rm->pasien->nik }}</div></div>
                 </div>
                 <div style="font-size:0.875rem;color:#64748b;">Dokter: <strong style="color:#1e293b;">{{ $rm->dokter->user->name }}</strong></div>
-                @php $vitals = [['❤️','Tekanan Darah',$rm->tekanan_darah,'mmHg'],['🌡️','Suhu',$rm->suhu_tubuh,'°C'],['⚖️','Berat',$rm->berat_badan,'kg']]; @endphp
+                @php $vitals = [['','Tekanan Darah',$rm->tekanan_darah,'mmHg'],['','Suhu',$rm->suhu_tubuh,'°C'],['','Berat',$rm->berat_badan,'kg']]; @endphp
                 @foreach($vitals as [$icon,$label,$val,$unit])
                 <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #f1f5f9;font-size:0.875rem;">
-                    <span style="color:#64748b;">{{ $icon }} {{ $label }}</span>
+                    <span style="color:#64748b;">{{ $label }}</span>
                     <span style="font-weight:600;">{{ $val ? $val.' '.$unit : '—' }}</span>
                 </div>
                 @endforeach

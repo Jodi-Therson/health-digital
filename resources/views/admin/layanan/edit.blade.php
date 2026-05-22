@@ -87,7 +87,6 @@
             </div>
 
             <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:2rem;">
-                <a href="{{ route('admin.layanan.index') }}" class="btn btn-secondary">Batal</a>
                 <button type="submit" class="btn btn-primary" style="padding:0.75rem 2rem;">Simpan Perubahan</button>
             </div>
         </form>

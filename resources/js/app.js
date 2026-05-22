@@ -1,9 +1,13 @@
-
 import Alpine from 'alpinejs';
+import { Chart, registerables } from 'chart.js';
 
 window.Alpine = Alpine;
 
 Alpine.start();
+
+// Expose Chart globally so inline scripts can use it
+Chart.register(...registerables);
+window.Chart = Chart;
 
 // Toast notifications helper
 window.showToast = function(message, type = 'success') {

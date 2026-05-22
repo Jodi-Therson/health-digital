@@ -28,9 +28,16 @@
             <p style="font-size:0.875rem; color:#64748b; margin-bottom:1.25rem; flex:1;">{{ Str::limit($f->deskripsi, 100) }}</p>
             <div style="display:flex; gap:0.5rem; justify-content:flex-end; border-top:1px solid #f1f5f9; padding-top:1rem;">
                 <a href="{{ route('admin.fasilitas.edit', $f->id) }}" class="btn btn-secondary btn-sm" style="background:#f8fafc;">Edit</a>
-                <form method="POST" action="{{ route('admin.fasilitas.destroy', $f->id) }}" onsubmit="return confirm('Hapus fasilitas ini?');">
+                <form method="POST" action="{{ route('admin.fasilitas.destroy', $f->id) }}" x-ref="deleteFasilitas{{ $f->id }}">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" style="background:#fee2e2; color:#ef4444; border:none;">Hapus</button>
+                    <button type="button"
+                        @click="triggerConfirm(
+                            'Hapus Fasilitas',
+                            'Hapus fasilitas {{ $f->nama }}? Foto juga akan dihapus. Tindakan ini tidak dapat dibatalkan.',
+                            () => { $refs.deleteFasilitas{{ $f->id }}.submit() },
+                            'danger'
+                        )"
+                        class="btn btn-danger btn-sm" style="background:#fee2e2; color:#ef4444; border:none;">Hapus</button>
                 </form>
             </div>
         </div>

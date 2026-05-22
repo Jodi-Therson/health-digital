@@ -111,7 +111,6 @@
                 @error('keluhan')<div class="form-error">{{ $message }}</div>@enderror
             </div>
             <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                <a href="{{ route('perawat.antrian.index') }}" class="btn btn-secondary">Batal</a>
                 <button type="submit" class="btn btn-primary" :disabled="loading">
                     <span x-show="!loading">Tambah Antrian</span>
                     <span x-show="loading" x-cloak>Memproses...</span>

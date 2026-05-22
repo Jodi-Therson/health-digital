@@ -47,9 +47,9 @@
         </div>
         <div style="text-align:right;">
             @if($antrianHariIni->status === 'dipanggil')
-            <div class="badge badge-dipanggil" style="font-size:0.875rem; padding:0.5rem 1rem;">🔔 Anda Dipanggil!</div>
+            <div class="badge badge-dipanggil" style="font-size:0.875rem; padding:0.5rem 1rem;">Anda Dipanggil!</div>
             @else
-            <div class="badge" style="background:rgba(255,255,255,0.2); color:white; font-size:0.875rem; padding:0.5rem 1rem;">⏳ Menunggu</div>
+            <div class="badge" style="background:rgba(255,255,255,0.2); color:white; font-size:0.875rem; padding:0.5rem 1rem;">Menunggu</div>
             @endif
             <div style="font-size:0.8125rem; opacity:0.7; margin-top:0.5rem;">{{ $antrianHariIni->tanggal->format('d M Y') }}</div>
         </div>

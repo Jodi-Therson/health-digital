@@ -14,20 +14,27 @@ class AntrianController extends Controller
     public function index(Request $request)
     {
         $dokter = auth()->user()->dokter;
-        $query = $dokter->antrians()->with(['pasien.user', 'layanan']);
+        
+        // Base query for today's antrian
+        $baseQuery = $dokter->antrians()->whereDate('tanggal', today());
 
-        if ($request->tanggal) {
-            $query->whereDate('tanggal', $request->tanggal);
-        } else {
-            $query->whereDate('tanggal', today());
-        }
+        // Get status counts for the interactive cards
+        $counts = [
+            'semua' => (clone $baseQuery)->count(),
+            'menunggu' => (clone $baseQuery)->where('status', 'menunggu')->count(),
+            'dipanggil' => (clone $baseQuery)->where('status', 'dipanggil')->count(),
+            'selesai' => (clone $baseQuery)->where('status', 'selesai')->count(),
+            'batal' => (clone $baseQuery)->where('status', 'batal')->count(),
+        ];
+
+        $query = $dokter->antrians()->with(['pasien.user', 'layanan'])->whereDate('tanggal', today());
 
         if ($request->status) {
             $query->where('status', $request->status);
         }
 
         $antrians = $query->latest()->paginate(15);
-        return view('dokter.antrian.index', compact('antrians'));
+        return view('dokter.antrian.index', compact('antrians', 'counts'));
     }
 
     public function updateStatus(Request $request, $id)

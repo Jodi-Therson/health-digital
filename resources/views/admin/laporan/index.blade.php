@@ -209,7 +209,6 @@
     }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Bar Chart

@@ -42,10 +42,6 @@
     </div>
 
     <div class="flex items-center gap-3">
-        <!-- Notifications -->
-        <button class="relative p-2 rounded-full hover:bg-neutral-100 text-neutral-500 hover:text-neutral-700 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        </button>
 
         <!-- User dropdown -->
         <div x-data="{ open: false }" class="relative">
@@ -69,7 +65,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         Profil Saya
                     </a>
-                    <a href="#" style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:0.5rem; font-size:0.875rem; color:#475569; text-decoration:none; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                    <a href="{{ route('profile.index') }}" style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:0.5rem; font-size:0.875rem; color:#475569; text-decoration:none; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Pengaturan
                     </a>
@@ -191,6 +187,24 @@
 <footer style="background:white; border-top:1px solid #e2e8f0; padding:1rem 1.5rem; text-align:center; font-size:0.8125rem; color:#94a3b8;">
     © {{ date('Y') }} <strong style="color:#2563eb;">HealthDigital</strong> — Platform Layanan Kesehatan Digital. All rights reserved.
 </footer>
+
+<script>
+// Auto-dismiss flash alerts using data-auto-hide attribute
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-auto-hide]').forEach(el => {
+        const delay = parseInt(el.getAttribute('data-auto-hide'), 10);
+        if (!delay) return;
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.5s ease, max-height 0.4s ease, margin 0.4s ease';
+            el.style.opacity = '0';
+            el.style.maxHeight = '0';
+            el.style.overflow = 'hidden';
+            el.style.marginBottom = '0';
+            setTimeout(() => el.remove(), 500);
+        }, delay);
+    });
+});
+</script>
 
 </body>
 </html>

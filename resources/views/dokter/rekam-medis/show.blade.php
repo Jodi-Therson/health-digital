@@ -52,10 +52,10 @@
                     <img src="{{ $rm->pasien->user->avatar_url }}" style="width:3rem;height:3rem;border-radius:50%;object-fit:cover;">
                     <div><div style="font-weight:700;color:#1e293b;">{{ $rm->pasien->user->name }}</div><div style="font-size:0.8125rem;color:#64748b;">NIK: {{ $rm->pasien->nik }}</div></div>
                 </div>
-                @php $vitals = [['❤️','Tekanan Darah',$rm->tekanan_darah,'mmHg'],['⚖️','Berat Badan',$rm->berat_badan,'kg'],['📏','Tinggi Badan',$rm->tinggi_badan,'cm'],['🌡️','Suhu Tubuh',$rm->suhu_tubuh,'°C']]; @endphp
+                @php $vitals = [['','Tekanan Darah',$rm->tekanan_darah,'mmHg'],['','Berat Badan',$rm->berat_badan,'kg'],['','Tinggi Badan',$rm->tinggi_badan,'cm'],['','Suhu Tubuh',$rm->suhu_tubuh,'°C']]; @endphp
                 @foreach($vitals as [$icon,$label,$val,$unit])
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.625rem 0;border-bottom:1px solid #f1f5f9;">
-                    <div style="font-size:0.875rem;color:#64748b;">{{ $icon }} {{ $label }}</div>
+                    <div style="font-size:0.875rem;color:#64748b;">{{ $label }}</div>
                     <div style="font-weight:700;color:#1e293b;">{{ $val ? $val.' '.$unit : '—' }}</div>
                 </div>
                 @endforeach

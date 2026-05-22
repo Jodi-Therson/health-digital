@@ -102,7 +102,7 @@ class KonsultasiController extends Controller
 
         return redirect()
             ->route('pasien.pembayaran.show', $pembayaran->id)
-            ->with('info', '✅ Konsultasi berhasil dibuat! Selesaikan pembayaran QRIS untuk mulai berkonsultasi dengan dokter.');
+            ->with('info', 'Konsultasi berhasil dibuat! Selesaikan pembayaran QRIS untuk mulai berkonsultasi dengan dokter.');
     }
 
     public function show($id)

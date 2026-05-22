@@ -128,7 +128,7 @@
 
                 <!-- Tips -->
                 <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:0.625rem; padding:1rem; font-size:0.8125rem;">
-                    <div style="font-weight:600; color:#15803d; margin-bottom:0.5rem;">💡 Tips pengisian keluhan:</div>
+                    <div style="font-weight:600; color:#15803d; margin-bottom:0.5rem;">Tips pengisian keluhan:</div>
                     <ul style="color:#166534; padding-left:1.25rem; margin:0; line-height:1.8;">
                         <li>Sebutkan gejala yang dirasakan</li>
                         <li>Durasi keluhan sudah berapa lama</li>
@@ -140,7 +140,6 @@
     </div>
 
     <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1.5rem;">
-        <a href="{{ route('pasien.antrian.index') }}" class="btn btn-secondary">Batal</a>
         <button type="submit" class="btn btn-primary" :disabled="loading">
             Daftar Antrian
         </button>

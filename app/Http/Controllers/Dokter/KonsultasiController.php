@@ -22,12 +22,19 @@ class KonsultasiController extends Controller
         return view('dokter.konsultasi.index', compact('konsultasis'));
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $dokter = auth()->user()->dokter;
         $konsultasi = Konsultasi::where('dokter_id', $dokter->id)
             ->with(['pasien.user', 'pasien', 'pesans'])
             ->findOrFail($id);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => $konsultasi->status,
+                'messages_count' => $konsultasi->pesans()->count(),
+            ]);
+        }
 
         $konsultasi->update(['dibaca_dokter' => true]);
 
@@ -71,6 +78,10 @@ class KonsultasiController extends Controller
             ? 'Konsultasi berhasil ditutup.'
             : 'Balasan berhasil dikirim.';
 
-        return redirect()->route('dokter.konsultasi.index')->with('success', $msg);
+        if ($request->action === 'ditutup') {
+            return redirect()->route('dokter.konsultasi.index')->with('success', $msg);
+        }
+
+        return redirect()->route('dokter.konsultasi.show', $konsultasi->id)->with('success', $msg);
     }
 }

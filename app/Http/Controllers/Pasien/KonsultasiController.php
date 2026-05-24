@@ -105,12 +105,19 @@ class KonsultasiController extends Controller
             ->with('info', 'Konsultasi berhasil dibuat! Selesaikan pembayaran QRIS untuk mulai berkonsultasi dengan dokter.');
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $pasien = auth()->user()->pasien;
         $konsultasi = Konsultasi::where('pasien_id', $pasien->id)
             ->with(['dokter.user', 'pesans'])
             ->findOrFail($id);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => $konsultasi->status,
+                'messages_count' => $konsultasi->pesans()->count(),
+            ]);
+        }
 
         // Mark as read by pasien
         if (!$konsultasi->dibaca_pasien && $konsultasi->status === 'dijawab') {

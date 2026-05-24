@@ -33,7 +33,7 @@
                 <strong>{{ $pembayaranKonsultasi->jumlah_format }}</strong> agar dokter dapat melihat dan membalas pertanyaan Anda.
             </div>
             <a href="{{ route('pasien.pembayaran.show', $pembayaranKonsultasi->id) }}"
-               class="btn btn-primary" style="background:#d97706;border-color:#d97706;font-size:0.875rem;padding:0.5rem 1.25rem;">
+               class="btn btn-primary" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; background:#d97706 !important; border-color:#d97706 !important; font-size:0.875rem !important; padding:0.5rem 1.25rem !important;">
                 <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16.01 20H18a2 2 0 002-2v-6a2 2 0 00-2-2h-2M12 12V6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2h2"/></svg>
                 Bayar via QRIS Sekarang
             </a>
@@ -127,9 +127,15 @@
                     @error('pesan')<div class="form-error">{{ $message }}</div>@enderror
                 </div>
                 <div style="display:flex;justify-content:flex-end;">
-                    <button type="submit" class="btn btn-primary" :disabled="loading">
-                        <span x-show="!loading">Kirim Balasan</span>
-                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Mengirim...</span>
+                    <button type="submit" class="btn btn-primary" :disabled="loading"
+                            style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;">
+                        <span x-show="!loading" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
+                            Kirim Balasan
+                        </span>
+                        <span x-show="loading" x-cloak style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
+                            <span class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem;"></span>
+                            Mengirim...
+                        </span>
                     </button>
                 </div>
             </form>
@@ -139,10 +145,31 @@
 </div>
 
 <script>
-// Scroll to bottom of chat
+// Scroll to bottom of chat and poll for updates
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('chat-container');
     if (container) container.scrollTop = container.scrollHeight;
+
+    const currentStatus = "{{ $konsultasi->status }}";
+    const currentMessagesCount = {{ $konsultasi->pesans ? $konsultasi->pesans->count() : ($konsultasi->balasan ? 2 : 1) }};
+
+    if (currentStatus !== 'ditutup') {
+        setInterval(() => {
+            fetch('{{ route('pasien.konsultasi.show', $konsultasi->id) }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.messages_count !== currentMessagesCount || data.status !== currentStatus) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {});
+        }, 3000);
+    }
 });
 </script>
 @endsection

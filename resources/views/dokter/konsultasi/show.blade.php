@@ -41,7 +41,7 @@
     @endif
 
     {{-- Bubble Chat --}}
-    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;">
+    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;" id="chat-container">
         @if($konsultasi->pesans && $konsultasi->pesans->count() > 0)
             @foreach($konsultasi->pesans as $pesan)
                 @if($pesan->pengirim === 'pasien')
@@ -95,7 +95,7 @@
         <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
             <span>Tulis Balasan</span>
             <button type="button" class="btn btn-secondary btn-sm" @click="showTutupModal = true"
-                    style="display:flex;align-items:center;gap:0.375rem;color:#64748b;">
+                    style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.375rem !important; color:#64748b !important;">
                 <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 Tutup Konsultasi
             </button>
@@ -114,12 +114,16 @@
                     @error('balasan')<div class="form-error">{{ $message }}</div>@enderror
                 </div>
                 <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                    <button type="submit" class="btn btn-success" :disabled="loading">
-                        <span x-show="!loading" style="display:flex;align-items:center;gap:0.5rem;">
+                    <button type="submit" class="btn btn-success" :disabled="loading"
+                            style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;">
+                        <span x-show="!loading" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
                             <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                             Kirim Balasan
                         </span>
-                        <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Mengirim...</span>
+                        <span x-show="loading" x-cloak style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
+                            <span class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem;"></span>
+                            Mengirim...
+                        </span>
                     </button>
                 </div>
             </form>
@@ -156,4 +160,32 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('chat-container');
+    if (container) container.scrollTop = container.scrollHeight;
+
+    const currentStatus = "{{ $konsultasi->status }}";
+    const currentMessagesCount = {{ $konsultasi->pesans ? $konsultasi->pesans->count() : ($konsultasi->balasan ? 2 : 1) }};
+
+    if (currentStatus !== 'ditutup') {
+        setInterval(() => {
+            fetch('{{ route('dokter.konsultasi.show', $konsultasi->id) }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.messages_count !== currentMessagesCount || data.status !== currentStatus) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {});
+        }, 3000);
+    }
+});
+</script>
 @endsection

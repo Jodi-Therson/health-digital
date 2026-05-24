@@ -19,7 +19,7 @@
         <span>Form Konsultasi</span>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('pasien.konsultasi.store') }}"
+        <form method="POST" action="{{ route('pasien.konsultasi.store') }}" x-ref="konsultasiForm"
               x-data="{
                 loading: false,
                 selectedLayanan: '{{ old('layanan_id') }}',
@@ -155,12 +155,22 @@
             </div>
 
             <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                <button type="submit" class="btn btn-primary" :disabled="loading || dupAlert || charCount < 20">
-                    <span x-show="!loading" style="display:flex;align-items:center;gap:0.5rem;">
+                <button type="button" class="btn btn-primary" :disabled="loading || dupAlert || charCount < 20"
+                        style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;"
+                        @click="triggerConfirm(
+                            'Konfirmasi Kirim Pertanyaan',
+                            'Kirim pertanyaan konsultasi ini? Setelah dikirim, Anda perlu menunggu balasan dokter sebelum dapat mengirim pesan tambahan.',
+                            () => { loading = true; $refs.konsultasiForm.submit() },
+                            'primary'
+                        )">
+                    <span x-show="!loading" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
                         <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                         Kirim Pertanyaan
                     </span>
-                    <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Mengirim...</span>
+                    <span x-show="loading" x-cloak style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
+                        <span class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem;"></span>
+                        Mengirim...
+                    </span>
                 </button>
             </div>
         </form>

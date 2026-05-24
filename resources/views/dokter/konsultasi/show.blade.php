@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<div style="max-width:740px;" x-data="{ showTutupModal: false }">
+<div x-data="{ showTutupModal: false }">
 
     {{-- Banner ditutup --}}
     @if($konsultasi->status === 'ditutup')
@@ -91,44 +91,59 @@
 
     {{-- Form Balas Dokter --}}
     @if(in_array($konsultasi->status, ['menunggu', 'dijawab']))
-    <div class="card">
-        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>Tulis Balasan</span>
-            <button type="button" class="btn btn-secondary btn-sm" @click="showTutupModal = true"
-                    style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.375rem !important; color:#64748b !important;">
-                <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                Tutup Konsultasi
-            </button>
-        </div>
-        <div class="card-body">
+        @php
+            $pembayaran = \App\Models\Pembayaran::where('konsultasi_id', $konsultasi->id)->first();
+            $isPaid = $pembayaran && $pembayaran->status === 'dibayar';
+        @endphp
 
-            <form method="POST" action="{{ route('dokter.konsultasi.update', $konsultasi->id) }}" x-data="{loading:false}" @submit="loading=true" id="formBalas">
-                @csrf @method('PUT')
-                <input type="hidden" name="action" value="dijawab">
-                <div class="form-group">
-                    <label class="form-label">Balasan Medis <span style="color:#ef4444;">*</span></label>
-                    <textarea name="balasan" rows="5"
-                              class="form-input {{ $errors->has('balasan')?'error':'' }}"
-                              placeholder="Tulis balasan atau saran medis Anda secara detail..."
-                              required>{{ old('balasan') }}</textarea>
-                    @error('balasan')<div class="form-error">{{ $message }}</div>@enderror
-                </div>
-                <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                    <button type="submit" class="btn btn-success" :disabled="loading"
-                            style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;">
-                        <span x-show="!loading" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
-                            <svg style="width:1rem;height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                            Kirim Balasan
-                        </span>
-                        <span x-show="loading" x-cloak style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
-                            <span class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem;"></span>
-                            Mengirim...
-                        </span>
-                    </button>
-                </div>
-            </form>
+        @if($isPaid)
+        <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+                <span>Tulis Balasan</span>
+                <button type="button" class="btn btn-secondary btn-sm" @click="showTutupModal = true"
+                        style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.375rem !important; color:#64748b !important;">
+                    <svg style="width:0.875rem;height:0.875rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    Tutup Konsultasi
+                </button>
+            </div>
+            <div class="card-body">
+
+                <form method="POST" action="{{ route('dokter.konsultasi.update', $konsultasi->id) }}" x-data="{loading:false}" @submit="loading=true" id="formBalas">
+                    @csrf @method('PUT')
+                    <input type="hidden" name="action" value="dijawab">
+                    <div class="form-group">
+                        <label class="form-label">Balasan Medis <span style="color:#ef4444;">*</span></label>
+                        <textarea name="balasan" rows="5"
+                                  class="form-input {{ $errors->has('balasan')?'error':'' }}"
+                                  placeholder="Tulis balasan atau saran medis Anda secara detail..."
+                                  required>{{ old('balasan') }}</textarea>
+                        @error('balasan')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                        <button type="submit" class="btn btn-success" :disabled="loading"
+                                style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;">
+                            <svg x-show="!loading" style="width:1rem;height:1rem;display:inline-block;vertical-align:middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                            <span x-show="loading" x-cloak class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem; display:inline-block; vertical-align:middle;"></span>
+                            <span x-text="loading ? 'Mengirim...' : 'Kirim Balasan'" style="display:inline-block; vertical-align:middle;"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+        @else
+        <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:0.75rem; padding:1.5rem; display:flex; align-items:flex-start; gap:1rem; margin-top:0.5rem; margin-bottom:1.5rem;">
+            <div style="background:#fef3c7; width:2.5rem; height:2.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg style="width:1.25rem; height:1.25rem; color:#d97706;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div>
+                <div style="font-weight:700; color:#92400e; font-size:0.9375rem; margin-bottom:0.375rem;">Menunggu Pembayaran Pasien</div>
+                <div style="font-size:0.875rem; color:#b45309; line-height:1.6;">
+                    Pasien belum menyelesaikan pembayaran untuk sesi konsultasi ini.
+                    Formulir balasan akan otomatis aktif setelah pembayaran lunas diverifikasi.
+                </div>
+            </div>
+        </div>
+        @endif
     @endif
 
     {{-- Modal Tutup Konsultasi --}}

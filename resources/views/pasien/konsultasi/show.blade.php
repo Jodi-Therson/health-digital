@@ -129,13 +129,8 @@
                 <div style="display:flex;justify-content:flex-end;">
                     <button type="submit" class="btn btn-primary" :disabled="loading"
                             style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important; justify-content:center !important;">
-                        <span x-show="!loading" style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
-                            Kirim Balasan
-                        </span>
-                        <span x-show="loading" x-cloak style="display:inline-flex !important; flex-direction:row !important; align-items:center !important; gap:0.5rem !important;">
-                            <span class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem;"></span>
-                            Mengirim...
-                        </span>
+                        <span x-show="loading" x-cloak class="spinner" style="border-color:rgba(255,255,255,0.3); border-top-color:white; width:1.25rem; height:1.25rem; display:inline-block; vertical-align:middle;"></span>
+                        <span x-text="loading ? 'Mengirim...' : 'Kirim Balasan'" style="display:inline-block; vertical-align:middle;"></span>
                     </button>
                 </div>
             </form>

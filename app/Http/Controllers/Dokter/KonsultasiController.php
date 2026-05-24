@@ -50,6 +50,12 @@ class KonsultasiController extends Controller
         $dokter     = auth()->user()->dokter;
         $konsultasi = Konsultasi::where('dokter_id', $dokter->id)->findOrFail($id);
 
+        // Verification check: Pasien must have paid for the consultation
+        $pembayaran = \App\Models\Pembayaran::where('konsultasi_id', $konsultasi->id)->first();
+        if ($pembayaran && $pembayaran->status !== 'dibayar') {
+            return back()->with('error', 'Akses ditolak. Pasien belum menyelesaikan pembayaran untuk sesi konsultasi ini.');
+        }
+
         // Bila hanya tutup (tanpa balas), balasan bisa kosong
         $balasan = $request->balasan;
 

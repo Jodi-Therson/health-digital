@@ -34,7 +34,15 @@
                         <span style="background:#ef4444;color:white;font-size:0.625rem;font-weight:700;padding:0.125rem 0.5rem;border-radius:9999px;">BARU</span>
                         @endif
                         @if($k->status === 'menunggu')
-                        <span style="background:#fef3c7;color:#92400e;font-size:0.7rem;font-weight:600;padding:0.1rem 0.5rem;border-radius:9999px;">Menunggu Balasan Anda</span>
+                            @php
+                                $pembayaran = \App\Models\Pembayaran::where('konsultasi_id', $k->id)->first();
+                                $isPaid = $pembayaran && $pembayaran->status === 'dibayar';
+                            @endphp
+                            @if($isPaid)
+                                <span style="background:#fef3c7;color:#92400e;font-size:0.7rem;font-weight:600;padding:0.1rem 0.5rem;border-radius:9999px;">Menunggu Balasan Anda</span>
+                            @else
+                                <span style="background:#fee2e2;color:#ef4444;font-size:0.7rem;font-weight:600;padding:0.1rem 0.5rem;border-radius:9999px;">Belum Bayar (Menunggu Pembayaran)</span>
+                            @endif
                         @endif
                     </div>
                     <div style="font-size:0.875rem;color:#475569;margin-bottom:0.125rem;">{{ $k->judul }}</div>

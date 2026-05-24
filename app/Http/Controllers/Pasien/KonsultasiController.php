@@ -113,9 +113,11 @@ class KonsultasiController extends Controller
             ->findOrFail($id);
 
         if ($request->ajax()) {
+            $pembayaran = \App\Models\Pembayaran::where('konsultasi_id', $konsultasi->id)->first();
             return response()->json([
                 'status' => $konsultasi->status,
                 'messages_count' => $konsultasi->pesans()->count(),
+                'payment_status' => $pembayaran ? $pembayaran->status : null,
             ]);
         }
 

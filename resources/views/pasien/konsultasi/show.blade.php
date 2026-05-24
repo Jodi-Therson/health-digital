@@ -39,11 +39,24 @@
             </a>
         </div>
     </div>
-    @elseif(isset($pembayaranKonsultasi) && $pembayaranKonsultasi && $pembayaranKonsultasi->status === 'dibayar')
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.75rem;padding:0.875rem 1.25rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+    @elseif(isset($pembayaranKonsultasi) && $pembayaranKonsultasi && $pembayaranKonsultasi->status === 'dibayar' && request()->has('just_paid'))
+    <div id="just-paid-alert" class="fade-in" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.75rem;padding:0.875rem 1.25rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;transition:all 0.5s ease;">
         <svg style="width:1.25rem;height:1.25rem;color:#10b981;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span style="font-size:0.875rem;color:#065f46;font-weight:500;">Pembayaran lunas — Anda dapat berkonsultasi dengan dokter.</span>
     </div>
+    <script>
+        setTimeout(() => {
+            const el = document.getElementById('just-paid-alert');
+            if (el) {
+                el.style.opacity = '0';
+                el.style.maxHeight = '0';
+                el.style.padding = '0';
+                el.style.marginBottom = '0';
+                el.style.borderWidth = '0';
+                setTimeout(() => el.remove(), 500);
+            }
+        }, 5000);
+    </script>
     @endif
 
     {{-- Banner ditutup --}}
@@ -55,7 +68,7 @@
     @endif
 
     {{-- Bubble Chat --}}
-    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;" id="chat-container">
+    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;max-height:480px;height:55vh;overflow-y:auto;padding-right:0.75rem;scroll-behavior:smooth;" id="chat-container">
         @if($konsultasi->pesans && $konsultasi->pesans->count() > 0)
             @foreach($konsultasi->pesans as $pesan)
                 @if($pesan->pengirim === 'pasien')
@@ -147,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const currentStatus = "{{ $konsultasi->status }}";
     const currentMessagesCount = {{ $konsultasi->pesans ? $konsultasi->pesans->count() : ($konsultasi->balasan ? 2 : 1) }};
+    const currentPaymentStatus = "{{ $pembayaranKonsultasi ? $pembayaranKonsultasi->status : 'menunggu' }}";
 
     if (currentStatus !== 'ditutup') {
         setInterval(() => {
@@ -158,7 +172,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => res.json())
             .then(data => {
-                if (data.messages_count !== currentMessagesCount || data.status !== currentStatus) {
+                if (
+                    data.messages_count !== currentMessagesCount || 
+                    data.status !== currentStatus ||
+                    data.payment_status !== currentPaymentStatus
+                ) {
                     window.location.reload();
                 }
             })

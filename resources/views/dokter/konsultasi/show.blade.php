@@ -41,7 +41,7 @@
     @endif
 
     {{-- Bubble Chat --}}
-    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;" id="chat-container">
+    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:1.5rem;max-height:480px;height:55vh;overflow-y:auto;padding-right:0.75rem;scroll-behavior:smooth;" id="chat-container">
         @if($konsultasi->pesans && $konsultasi->pesans->count() > 0)
             @foreach($konsultasi->pesans as $pesan)
                 @if($pesan->pengirim === 'pasien')
@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const currentStatus = "{{ $konsultasi->status }}";
     const currentMessagesCount = {{ $konsultasi->pesans ? $konsultasi->pesans->count() : ($konsultasi->balasan ? 2 : 1) }};
+    const currentPaymentStatus = "{{ (isset($isPaid) && $isPaid) ? 'dibayar' : 'menunggu' }}";
 
     if (currentStatus !== 'ditutup') {
         setInterval(() => {
@@ -194,7 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => res.json())
             .then(data => {
-                if (data.messages_count !== currentMessagesCount || data.status !== currentStatus) {
+                if (
+                    data.messages_count !== currentMessagesCount || 
+                    data.status !== currentStatus ||
+                    data.payment_status !== currentPaymentStatus
+                ) {
                     window.location.reload();
                 }
             })

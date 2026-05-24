@@ -13,9 +13,18 @@ class AntrianController extends Controller
 {
     public function __construct(protected AntrianService $antrianService) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $pasien = auth()->user()->pasien;
+
+        if ($request->ajax()) {
+            $activeAntrian = $pasien->antrians()
+                ->whereDate('tanggal', today())
+                ->whereIn('status', ['menunggu', 'dipanggil'])
+                ->pluck('status', 'id');
+            return response()->json($activeAntrian);
+        }
+
         $antrians = $pasien->antrians()
             ->with(['dokter.user', 'layanan'])
             ->latest()
@@ -81,12 +90,21 @@ class AntrianController extends Controller
         return redirect()->route('pasien.antrian.index')->with('success', 'Antrian berhasil dibuat! Nomor antrian Anda: ' . $noAntrian);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $pasien = auth()->user()->pasien;
         $antrian = Antrian::where('pasien_id', $pasien->id)
             ->with(['dokter.user', 'layanan', 'rekamMedis', 'pembayaran'])
             ->findOrFail($id);
+
+        if ($request->ajax()) {
+            return response()->json(['status' => $antrian->status]);
+        }
+
+        if ($antrian->status === 'selesai') {
+            abort(403, 'Akses ditolak. Antrian yang sudah selesai tidak dapat diakses.');
+        }
+
         return view('pasien.antrian.show', compact('antrian'));
     }
 

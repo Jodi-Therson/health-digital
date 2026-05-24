@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Antrian;
 use App\Models\Konsultasi;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $dokter = auth()->user()->dokter;
 
@@ -53,6 +54,14 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'totalHariIni' => $totalHariIni,
+                'totalSelesai' => $totalSelesai,
+                'konsultasiPending' => $konsultasiPending->count(),
+            ]);
+        }
 
         return view('dokter.dashboard', compact(
             'dokter', 'antrianHariIni', 'konsultasiPending',

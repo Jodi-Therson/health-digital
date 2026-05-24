@@ -240,7 +240,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    const currentDashboardStats = {
+        totalHariIni: {{ $totalHariIni }},
+        totalSelesai: {{ $totalSelesai }},
+        konsultasiPending: {{ $konsultasiPending->count() }}
+    };
+
+    setInterval(() => {
+        fetch('{{ route('dokter.dashboard') }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data && (
+                data.totalHariIni !== currentDashboardStats.totalHariIni ||
+                data.totalSelesai !== currentDashboardStats.totalSelesai ||
+                data.konsultasiPending !== currentDashboardStats.konsultasiPending
+            )) {
+                window.location.reload();
+            }
+        })
+        .catch(() => {});
+    }, 3000);
 });
 </script>
-
 @endsection

@@ -174,4 +174,38 @@
     <div style="padding:1rem 1.5rem;">{{ $antrians->links() }}</div>
     @endif
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentCounts = {
+        semua: {{ $counts['semua'] }},
+        menunggu: {{ $counts['menunggu'] }},
+        dipanggil: {{ $counts['dipanggil'] }},
+        selesai: {{ $counts['selesai'] }},
+        batal: {{ $counts['batal'] }}
+    };
+    
+    setInterval(() => {
+        fetch('{{ route('dokter.antrian.index') }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.counts && (
+                data.counts.semua !== currentCounts.semua ||
+                data.counts.menunggu !== currentCounts.menunggu ||
+                data.counts.dipanggil !== currentCounts.dipanggil ||
+                data.counts.selesai !== currentCounts.selesai ||
+                data.counts.batal !== currentCounts.batal
+            )) {
+                window.location.reload();
+            }
+        })
+        .catch(() => {});
+    }, 3000);
+});
+</script>
 @endsection

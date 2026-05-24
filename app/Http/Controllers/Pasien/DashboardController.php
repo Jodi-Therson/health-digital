@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $pasien = $user->pasien;
@@ -40,6 +40,13 @@ class DashboardController extends Controller
             ->whereIn('status', ['menunggu', 'dipanggil'])
             ->with(['dokter.user', 'layanan'])
             ->first();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'active_antrian_id' => $antrianHariIni ? $antrianHariIni->id : null,
+                'active_antrian_status' => $antrianHariIni ? $antrianHariIni->status : null,
+            ]);
+        }
 
         return view('pasien.dashboard', compact(
             'pasien', 'antrians', 'konsultasis', 'pembayarans', 'antrianHariIni'

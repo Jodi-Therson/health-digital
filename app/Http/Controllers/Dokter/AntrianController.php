@@ -27,6 +27,12 @@ class AntrianController extends Controller
             'batal' => (clone $baseQuery)->where('status', 'batal')->count(),
         ];
 
+        if ($request->ajax()) {
+            return response()->json([
+                'counts' => $counts,
+            ]);
+        }
+
         $query = $dokter->antrians()->with(['pasien.user', 'layanan'])->whereDate('tanggal', today());
 
         if ($request->status) {

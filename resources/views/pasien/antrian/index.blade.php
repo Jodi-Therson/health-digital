@@ -35,7 +35,13 @@
                     <td>{{ $a->layanan->nama }}</td>
                     <td>{{ $a->tanggal->format('d M Y') }}</td>
                     <td><span class="badge badge-{{ $a->status_badge_color }} {{ $a->status==='dipanggil'?'badge-dipanggil':'' }}">{{ $a->status_label }}</span></td>
-                    <td><a href="{{ route('pasien.antrian.show', $a->id) }}" class="btn btn-secondary btn-sm">Detail</a></td>
+                    <td>
+                        @if($a->status !== 'selesai')
+                            <a href="{{ route('pasien.antrian.show', $a->id) }}" class="btn btn-secondary btn-sm">Detail</a>
+                        @else
+                            <span style="color:#94a3b8; font-size:0.875rem;">—</span>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -44,4 +50,47 @@
     <div style="padding:1rem 1.5rem;">{{ $antrians->links() }}</div>
     @endif
 </div>
+
+@php
+    $currentActiveQueues = $antrians->filter(fn($a) => in_array($a->status, ['menunggu', 'dipanggil']))->pluck('status', 'id')->toJson();
+@endphp
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentActive = JSON.parse('{!! $currentActiveQueues !!}');
+    
+    if (Object.keys(currentActive).length > 0) {
+        setInterval(() => {
+            fetch('{{ route('pasien.antrian.index') }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                let changed = false;
+                const activeIds = Object.keys(data);
+                const currentIds = Object.keys(currentActive);
+                
+                if (activeIds.length !== currentIds.length) {
+                    changed = true;
+                } else {
+                    for (const id of currentIds) {
+                        if (data[id] !== currentActive[id]) {
+                            changed = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (changed) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {});
+        }, 3000);
+    }
+});
+</script>
 @endsection

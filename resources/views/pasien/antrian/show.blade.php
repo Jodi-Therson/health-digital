@@ -108,4 +108,30 @@
     </div>
 </div>
 <style>@media(max-width:768px){.detail-grid{grid-template-columns:1fr !important;}}</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentStatus = "{{ $antrian->status }}";
+    
+    if (currentStatus !== 'selesai') {
+        setInterval(() => {
+            fetch('{{ route('pasien.antrian.show', $antrian->id) }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'selesai') {
+                    window.location.href = "{{ route('pasien.antrian.index') }}";
+                } else if (data.status !== currentStatus) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {});
+        }, 3000);
+    }
+});
+</script>
 @endsection

@@ -135,4 +135,29 @@
     </div>
     @endif
 </div>
+
+@if(isset($antrianHariIni) && $antrianHariIni)
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentStatus = "{{ $antrianHariIni->status }}";
+    const queueId = {{ $antrianHariIni->id }};
+    
+    setInterval(() => {
+        fetch('{{ route('pasien.dashboard') }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.active_antrian_id !== queueId || data.active_antrian_status !== currentStatus) {
+                window.location.reload();
+            }
+        })
+        .catch(() => {});
+    }, 3000);
+});
+</script>
+@endif
 @endsection

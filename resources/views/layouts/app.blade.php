@@ -130,14 +130,14 @@
     <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition:enter="transition-opacity duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/40 z-40 lg:hidden" x-cloak></div>
 
     <!-- SIDEBAR -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="sidebar fixed lg:sticky lg:translate-x-0 z-50 transition-transform duration-200 lg:transition-none" x-cloak>
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="sidebar fixed lg:translate-x-0 z-50 transition-transform duration-200 lg:transition-none" x-cloak>
         <div style="padding:1rem 0.5rem;">
             @yield('sidebar')
         </div>
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-1 overflow-hidden p-4 lg:p-6">
+    <main class="flex-1 overflow-hidden p-4 lg:p-6 lg:ml-64">
         <!-- Breadcrumb -->
         @hasSection('breadcrumb')
         <nav class="breadcrumb">
@@ -184,7 +184,7 @@
 </div>
 
 <!-- FOOTER -->
-<footer style="background:white; border-top:1px solid #e2e8f0; padding:1rem 1.5rem; text-align:center; font-size:0.8125rem; color:#94a3b8;">
+<footer style="background:white; border-top:1px solid #e2e8f0; padding:1rem 1.5rem; text-align:center; font-size:0.8125rem; color:#94a3b8;" class="lg:ml-64">
     © {{ date('Y') }} <strong style="color:#2563eb;">HealthDigital</strong> — Platform Layanan Kesehatan Digital. All rights reserved.
 </footer>
 

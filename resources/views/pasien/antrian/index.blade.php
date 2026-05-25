@@ -36,11 +36,7 @@
                     <td>{{ $a->tanggal->format('d M Y') }}</td>
                     <td><span class="badge badge-{{ $a->status_badge_color }} {{ $a->status==='dipanggil'?'badge-dipanggil':'' }}">{{ $a->status_label }}</span></td>
                     <td>
-                        @if($a->status !== 'selesai')
-                            <a href="{{ route('pasien.antrian.show', $a->id) }}" class="btn btn-secondary btn-sm">Detail</a>
-                        @else
-                            <span style="color:#94a3b8; font-size:0.875rem;">—</span>
-                        @endif
+                        <a href="{{ route('pasien.antrian.show', $a->id) }}" class="btn btn-secondary btn-sm">Detail</a>
                     </td>
                 </tr>
                 @endforeach

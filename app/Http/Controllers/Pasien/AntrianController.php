@@ -101,10 +101,6 @@ class AntrianController extends Controller
             return response()->json(['status' => $antrian->status]);
         }
 
-        if ($antrian->status === 'selesai') {
-            abort(403, 'Akses ditolak. Antrian yang sudah selesai tidak dapat diakses.');
-        }
-
         return view('pasien.antrian.show', compact('antrian'));
     }
 

@@ -14,7 +14,23 @@
 </div>
 
 
-<form id="rmForm" method="POST" action="{{ route('dokter.rekam-medis.store') }}" x-data="{loading:false, showConfirm:false, resep:[{obat:'',dosis:'',aturan:''}]}" @submit.prevent>
+@php
+    $oldResep = [];
+    if (old('resep_obat')) {
+        foreach (old('resep_obat') as $i => $obat) {
+            $oldResep[] = [
+                'obat'   => $obat,
+                'dosis'  => old('resep_dosis')[$i] ?? '',
+                'aturan' => old('resep_aturan')[$i] ?? '',
+            ];
+        }
+    }
+    if (empty($oldResep)) {
+        $oldResep = [['obat' => '', 'dosis' => '', 'aturan' => '']];
+    }
+@endphp
+
+<form id="rmForm" method="POST" action="{{ route('dokter.rekam-medis.store') }}" x-data="{loading:false, showConfirm:false, resep: {{ json_encode($oldResep) }} }" @submit.prevent>
     @csrf
     @if($antrian)
     <input type="hidden" name="antrian_id" value="{{ $antrian->id }}">
@@ -99,23 +115,37 @@
     <!-- Resep -->
     <div class="card" style="margin-top:1.5rem;">
         <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>Resep Obat</span>
+            <span>Resep Obat <span style="color:#ef4444;">*</span></span>
             <button type="button" @click="resep.push({obat:'',dosis:'',aturan:''})" class="btn btn-secondary btn-sm">+ Tambah Obat</button>
         </div>
         <div class="card-body">
+            @if($errors->has('resep_obat') || $errors->has('resep_obat.*') || $errors->has('resep_dosis.*') || $errors->has('resep_aturan.*'))
+                <div class="form-error" style="margin-bottom:1rem;padding:0.75rem;background:#fef2f2;border:1px solid #fee2e2;border-radius:0.375rem;color:#991b1b;font-size:0.875rem;">
+                    <strong>Terjadi kesalahan pada resep obat:</strong>
+                    <ul style="margin:0.25rem 0 0 1rem;padding:0;">
+                        @if($errors->has('resep_obat')) <li>{{ $errors->first('resep_obat') }}</li> @endif
+                        @foreach($errors->all() as $error)
+                            @if(Str::contains($error, ['obat', 'dosis', 'aturan']))
+                                <li>{{ $error }}</li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <template x-for="(r, i) in resep" :key="i">
                 <div class="prescription-grid">
                     <div>
-                        <label class="form-label" style="font-size:0.75rem;">Nama Obat</label>
-                        <input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input" placeholder="Nama obat">
+                        <label class="form-label" style="font-size:0.75rem;">Nama Obat <span style="color:#ef4444;">*</span></label>
+                        <input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input" placeholder="Nama obat" required>
                     </div>
                     <div>
-                        <label class="form-label" style="font-size:0.75rem;">Dosis</label>
-                        <input type="text" :name="'resep_dosis['+i+']'" x-model="r.dosis" class="form-input" placeholder="500mg">
+                        <label class="form-label" style="font-size:0.75rem;">Dosis <span style="color:#ef4444;">*</span></label>
+                        <input type="text" :name="'resep_dosis['+i+']'" x-model="r.dosis" class="form-input" placeholder="500mg" required>
                     </div>
                     <div>
-                        <label class="form-label" style="font-size:0.75rem;">Aturan Pakai</label>
-                        <input type="text" :name="'resep_aturan['+i+']'" x-model="r.aturan" class="form-input" placeholder="3x sehari sesudah makan">
+                        <label class="form-label" style="font-size:0.75rem;">Aturan Pakai <span style="color:#ef4444;">*</span></label>
+                        <input type="text" :name="'resep_aturan['+i+']'" x-model="r.aturan" class="form-input" placeholder="3x sehari sesudah makan" required>
                     </div>
                     <div>
                         <button type="button" @click="resep.splice(i,1)" class="btn btn-danger btn-sm" x-show="resep.length > 1">×</button>
@@ -136,7 +166,7 @@
     </div>
 
     <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;">
-        <button type="button" class="btn btn-primary" @click="showConfirm = true" :disabled="loading">
+        <button type="button" class="btn btn-primary" @click="if ($event.target.closest('form').reportValidity()) { showConfirm = true }" :disabled="loading">
             <span x-show="!loading">Selesaikan Pemeriksaan</span>
             <span x-show="loading" x-cloak style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></span>Menyimpan...</span>
         </button>

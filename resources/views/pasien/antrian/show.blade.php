@@ -67,16 +67,36 @@
     </div>
 
     <div style="display:flex; flex-direction:column; gap:1rem;">
-        <!-- Rekam medis -->
-        @if($antrian->rekamMedis)
-        <div class="card">
-            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-                <span>Rekam Medis</span>
-                <a href="{{ route('pasien.rekam-medis.show', $antrian->rekamMedis->id) }}" class="btn btn-secondary btn-sm">Lihat Detail</a>
+        <!-- Resep Obat Dokter (Only shown if status is selesai) -->
+        @if($antrian->status === 'selesai' && optional($antrian->rekamMedis)->resep)
+        <div class="card" style="border-left:3px solid #2563eb;">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;background:#eff6ff;">
+                <span style="font-weight:700;color:#1e3a8a;display:flex;align-items:center;gap:0.5rem;">
+                    <svg style="width:1.25rem;height:1.25rem;color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Resep Obat Dokter
+                </span>
             </div>
-            <div class="card-body">
-                <div style="font-size:0.875rem; color:#64748b; margin-bottom:0.5rem;">Diagnosa:</div>
-                <div style="font-size:0.9375rem; font-weight:600; color:#1e293b;">{{ $antrian->rekamMedis->diagnosa }}</div>
+            <div class="card-body" style="padding:0;">
+                <div class="table-container" style="border:none;border-radius:0;">
+                    <table class="data-table" style="width:100%;border-collapse:collapse;margin:0;">
+                        <thead>
+                            <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;">
+                                <th style="padding:0.75rem 1rem;text-align:left;font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;">Nama Obat</th>
+                                <th style="padding:0.75rem 1rem;text-align:left;font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;">Dosis</th>
+                                <th style="padding:0.75rem 1rem;text-align:left;font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;">Aturan Pakai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($antrian->rekamMedis->resep as $r)
+                            <tr style="border-bottom:1px solid #f1f5f9;">
+                                <td style="padding:0.875rem 1rem;font-weight:600;color:#1e293b;font-size:0.875rem;">{{ $r['obat'] }}</td>
+                                <td style="padding:0.875rem 1rem;color:#334155;font-size:0.875rem;">{{ $r['dosis'] }}</td>
+                                <td style="padding:0.875rem 1rem;color:#64748b;font-size:0.875rem;">{{ $r['aturan'] ?? 'Sesuai petunjuk' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         @endif
@@ -123,9 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => res.json())
             .then(data => {
-                if (data.status === 'selesai') {
-                    window.location.href = "{{ route('pasien.antrian.index') }}";
-                } else if (data.status !== currentStatus) {
+                if (data.status !== currentStatus) {
                     window.location.reload();
                 }
             })

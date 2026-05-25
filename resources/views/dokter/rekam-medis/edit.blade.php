@@ -6,7 +6,22 @@
     <div><h1 class="page-title">Edit Rekam Medis</h1></div>
     <a href="{{ route('dokter.rekam-medis.show', $rm->id) }}" class="btn btn-secondary">← Kembali</a>
 </div>
-<form method="POST" action="{{ route('dokter.rekam-medis.update', $rm->id) }}" x-data="{ loading:false, resep: {{ json_encode($rm->resep ?: [['obat'=>'','dosis'=>'','aturan'=>'']]) }} }" @submit="loading=true">
+@php
+    $oldResep = [];
+    if (old('resep_obat')) {
+        foreach (old('resep_obat') as $i => $obat) {
+            $oldResep[] = [
+                'obat'   => $obat,
+                'dosis'  => old('resep_dosis')[$i] ?? '',
+                'aturan' => old('resep_aturan')[$i] ?? '',
+            ];
+        }
+    } else {
+        $oldResep = $rm->resep ?: [['obat' => '', 'dosis' => '', 'aturan' => '']];
+    }
+@endphp
+
+<form method="POST" action="{{ route('dokter.rekam-medis.update', $rm->id) }}" x-data="{ loading:false, resep: {{ json_encode($oldResep) }} }" @submit="loading=true">
     @csrf @method('PUT')
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="form-grid">
         <div class="card">
@@ -31,15 +46,29 @@
     </div>
     <div class="card" style="margin-top:1rem;">
         <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>Resep Obat</span>
+            <span>Resep Obat <span style="color:#ef4444;">*</span></span>
             <button type="button" @click="resep.push({obat:'',dosis:'',aturan:''})" class="btn btn-secondary btn-sm">+ Tambah</button>
         </div>
         <div class="card-body">
+            @if($errors->has('resep_obat') || $errors->has('resep_obat.*') || $errors->has('resep_dosis.*') || $errors->has('resep_aturan.*'))
+                <div class="form-error" style="margin-bottom:1rem;padding:0.75rem;background:#fef2f2;border:1px solid #fee2e2;border-radius:0.375rem;color:#991b1b;font-size:0.875rem;">
+                    <strong>Terjadi kesalahan pada resep obat:</strong>
+                    <ul style="margin:0.25rem 0 0 1rem;padding:0;">
+                        @if($errors->has('resep_obat')) <li>{{ $errors->first('resep_obat') }}</li> @endif
+                        @foreach($errors->all() as $error)
+                            @if(Str::contains($error, ['obat', 'dosis', 'aturan']))
+                                <li>{{ $error }}</li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <template x-for="(r,i) in resep" :key="i">
                 <div class="prescription-grid">
-                    <div><label class="form-label" style="font-size:0.75rem;">Obat</label><input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input"></div>
-                    <div><label class="form-label" style="font-size:0.75rem;">Dosis</label><input type="text" :name="'resep_dosis['+i+']'" x-model="r.dosis" class="form-input"></div>
-                    <div><label class="form-label" style="font-size:0.75rem;">Aturan</label><input type="text" :name="'resep_aturan['+i+']'" x-model="r.aturan" class="form-input"></div>
+                    <div><label class="form-label" style="font-size:0.75rem;">Obat <span style="color:#ef4444;">*</span></label><input type="text" :name="'resep_obat['+i+']'" x-model="r.obat" class="form-input" required></div>
+                    <div><label class="form-label" style="font-size:0.75rem;">Dosis <span style="color:#ef4444;">*</span></label><input type="text" :name="'resep_dosis['+i+']'" x-model="r.dosis" class="form-input" required></div>
+                    <div><label class="form-label" style="font-size:0.75rem;">Aturan <span style="color:#ef4444;">*</span></label><input type="text" :name="'resep_aturan['+i+']'" x-model="r.aturan" class="form-input" required></div>
                     <div><button type="button" @click="resep.splice(i,1)" class="btn btn-danger btn-sm" x-show="resep.length>1">×</button></div>
                 </div>
             </template>

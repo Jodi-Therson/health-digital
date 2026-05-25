@@ -53,18 +53,28 @@ class RekamMedisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'antrian_id'    => 'required|exists:antrians,id',
-            'pasien_id'     => 'required|exists:pasiens,id',
+            'antrian_id'      => 'required|exists:antrians,id',
+            'pasien_id'       => 'required|exists:pasiens,id',
             'tanggal_periksa' => 'required|date',
-            'diagnosa'      => 'required|string',
-            'anamnesis'     => 'nullable|string',
-            'tindakan'      => 'nullable|string',
-            'tekanan_darah' => 'nullable|string|max:20',
-            'berat_badan'   => 'nullable|numeric|min:1|max:300',
-            'tinggi_badan'  => 'nullable|numeric|min:1|max:300',
-            'suhu_tubuh'    => 'nullable|numeric|min:30|max:45',
+            'diagnosa'        => 'required|string',
+            'anamnesis'       => 'nullable|string',
+            'tindakan'        => 'nullable|string',
+            'tekanan_darah'   => 'nullable|string|max:20',
+            'berat_badan'     => 'nullable|numeric|min:1|max:300',
+            'tinggi_badan'    => 'nullable|numeric|min:1|max:300',
+            'suhu_tubuh'      => 'nullable|numeric|min:30|max:45',
+            'resep_obat'      => 'required|array|min:1',
+            'resep_obat.*'    => 'required|string',
+            'resep_dosis'     => 'required|array|min:1',
+            'resep_dosis.*'   => 'required|string',
+            'resep_aturan'    => 'required|array|min:1',
+            'resep_aturan.*'  => 'required|string',
         ], [
-            'diagnosa.required' => 'Diagnosa wajib diisi.',
+            'diagnosa.required'      => 'Diagnosa wajib diisi.',
+            'resep_obat.required'    => 'Resep obat wajib diisi.',
+            'resep_obat.*.required'  => 'Nama obat wajib diisi.',
+            'resep_dosis.*.required' => 'Dosis wajib diisi.',
+            'resep_aturan.*.required'=> 'Aturan pakai wajib diisi.',
         ]);
 
         $dokter = auth()->user()->dokter;
@@ -127,7 +137,19 @@ class RekamMedisController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'diagnosa' => 'required|string',
+            'diagnosa'       => 'required|string',
+            'resep_obat'     => 'required|array|min:1',
+            'resep_obat.*'   => 'required|string',
+            'resep_dosis'    => 'required|array|min:1',
+            'resep_dosis.*'  => 'required|string',
+            'resep_aturan'   => 'required|array|min:1',
+            'resep_aturan.*' => 'required|string',
+        ], [
+            'diagnosa.required'      => 'Diagnosa wajib diisi.',
+            'resep_obat.required'    => 'Resep obat wajib diisi.',
+            'resep_obat.*.required'  => 'Nama obat wajib diisi.',
+            'resep_dosis.*.required' => 'Dosis wajib diisi.',
+            'resep_aturan.*.required'=> 'Aturan pakai wajib diisi.',
         ]);
 
         $dokter = auth()->user()->dokter;

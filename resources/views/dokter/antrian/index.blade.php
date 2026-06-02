@@ -201,7 +201,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.counts.selesai !== currentCounts.selesai ||
                 data.counts.batal !== currentCounts.batal
             )) {
-                window.location.reload();
+                const isModalOpen = Array.from(document.querySelectorAll('.modal-backdrop')).some(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el.style.display !== 'none');
+                const isTyping = document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+                if (!isModalOpen && !isTyping) {
+                    window.location.reload();
+                }
             }
         })
         .catch(() => {});

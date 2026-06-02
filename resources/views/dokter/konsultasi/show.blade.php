@@ -200,7 +200,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.status !== currentStatus ||
                     data.payment_status !== currentPaymentStatus
                 ) {
-                    window.location.reload();
+                    const isModalOpen = Array.from(document.querySelectorAll('.modal-backdrop')).some(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el.style.display !== 'none');
+                    const isTyping = document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+                    if (!isModalOpen && !isTyping) {
+                        window.location.reload();
+                    }
                 }
             })
             .catch(() => {});

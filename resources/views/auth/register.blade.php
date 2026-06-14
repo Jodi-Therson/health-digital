@@ -27,7 +27,7 @@
         get emailError() {
             if (!this.emailTouched) return '';
             if (!this.email) return 'Email wajib diisi.';
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) return 'Format email tidak valid.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) return 'Format email tidak valid. example@domain.com';
             return '';
         },
         get phoneError() {

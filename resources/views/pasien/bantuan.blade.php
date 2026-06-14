@@ -71,5 +71,37 @@
         </div>
     </div>
 
+    <!-- FAQ 5: Hubungi Kami -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">5. Hubungi Kami</div>
+    <div class="card-body" style="color:#475569;line-height:1.6;font-size:0.9375rem;">
+        <p style="margin-bottom:0.75rem;">
+            Jika Anda mengalami kendala saat menggunakan portal pasien, membutuhkan bantuan pendaftaran,
+            pembayaran, atau memiliki pertanyaan terkait layanan kesehatan, silakan hubungi kami melalui:
+        </p>
+
+        <ul style="padding-left:1.5rem;margin-bottom:1rem;">
+            <li style="margin-bottom:0.5rem;">
+                <strong>Alamat:</strong> Jl. Kesehatan No. 1, Jakarta Pusat 10110
+            </li>
+            <li style="margin-bottom:0.5rem;">
+                <strong>Telepon:</strong> (021) 123-4567
+            </li>
+            <li style="margin-bottom:0.5rem;">
+                <strong>Email:</strong> info@healthdigital.id
+            </li>
+            <li>
+                <strong>Jam Operasional:</strong> Senin-Jumat: 07.00-17.00 WIB<br>
+                Sabtu: 07.00-12.00 WIB
+            </li>
+        </ul>
+
+        <div style="padding:0.75rem;background:#f8fafc;border-left:4px solid #10b981;border-radius:0.25rem;">
+            <strong>Tips:</strong> Untuk mendapatkan bantuan lebih cepat, siapkan nomor antrian,
+            nomor tagihan, atau informasi akun Anda saat menghubungi petugas kami.
+        </div>
+    </div>
+</div>
+
 </div>
 @endsection

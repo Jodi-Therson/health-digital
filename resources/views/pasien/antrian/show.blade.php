@@ -17,7 +17,8 @@
         @if($antrian->status === 'menunggu')
         <form method="POST" action="{{ route('pasien.antrian.update', $antrian->id) }}" x-ref="batalForm">
             @csrf @method('PUT')
-            <button type="button" name="action" value="batal"
+            <input type="hidden" name="action" value="batal">
+            <button type="button"
                 @click="triggerConfirm(
                     'Batalkan Antrian',
                     'Anda yakin ingin membatalkan antrian {{ $antrian->no_antrian }}? Tindakan ini tidak dapat dibatalkan.',
